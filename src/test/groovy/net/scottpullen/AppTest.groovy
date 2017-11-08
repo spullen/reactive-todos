@@ -12,5 +12,6 @@ class AppTest extends Specification {
 
         then:
         result != null
+        result == "Hello world."
     }
 }

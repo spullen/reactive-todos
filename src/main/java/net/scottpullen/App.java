@@ -16,7 +16,9 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
+        TimeZone.setDefault(Configuration.TIME_ZONE_ID);
+
+        Configuration configuration = Configuration.fromEnvironment();
 
         RxRatpack.initialize();
 
