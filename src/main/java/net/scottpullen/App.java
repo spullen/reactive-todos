@@ -2,6 +2,7 @@ package net.scottpullen;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ratpack.rx2.RxRatpack;
 import ratpack.server.RatpackServer;
 
 import java.util.TimeZone;
@@ -16,7 +17,9 @@ public class App {
 
     public static void main(String[] args) throws Exception {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
-        
+
+        RxRatpack.initialize();
+
         RatpackServer.start(spec -> {
             spec.handlers(chain -> {
                 chain
