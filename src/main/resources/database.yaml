@@ -1,0 +1,8 @@
+db:
+  dataSourceClassName: org.postgresql.ds.PGSimpleDataSource
+  username: admin
+  password: ''
+  dataSourceProperties:
+    databaseName: reactive_todos
+    serverName: localhost
+    portNumber: 5432
