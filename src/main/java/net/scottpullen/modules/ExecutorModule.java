@@ -1,25 +1,29 @@
 package net.scottpullen.modules;
 
+import io.reactivex.Scheduler;
+import io.reactivex.schedulers.Schedulers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static net.scottpullen.Configuration.MAX_DB_CONNECTIONS;
+import static net.scottpullen.Configuration.MAX_RABBIT_CONSUMER_THREADS;
+import static net.scottpullen.Configuration.SCHEDULED_THREAD_POOL_SIZE;
+
 public class ExecutorModule implements AutoCloseable {
 
     private static final Logger log = LoggerFactory.getLogger(ExecutorModule.class);
-
-    private static final String INSTRUMENTED_EXECUTOR_NAME = "executor";
 
     private final ExecutorService executor;
     private final ScheduledExecutorService scheduledExecutor;
     private final Scheduler dataAndMessagingScheduler;
 
-    private ExecutorService createExecutorService() {
-        return Executors.newFixedThreadPool(MAX_DB_CONNECTIONS + MAX_RABBIT_CONSUMER_THREADS);
-    }
 
-    public ExecutorModule(final TelemetryModule telemetryModule) {
-        // TODO, is it possible to create this without being instrumented?
-        // or what package does that come from?
-        executor = new InstrumentedExecutorService(createExecutorService(),
-            telemetryModule.getMetricRegistry(),
-            INSTRUMENTED_EXECUTOR_NAME);
+    public ExecutorModule() {
+        executor = Executors.newFixedThreadPool(MAX_DB_CONNECTIONS + MAX_RABBIT_CONSUMER_THREADS);
         scheduledExecutor = Executors.newScheduledThreadPool(SCHEDULED_THREAD_POOL_SIZE);
         dataAndMessagingScheduler = Schedulers.from(executor);
     }

@@ -16,9 +16,11 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        TimeZone.setDefault(Configuration.TIME_ZONE_ID);
+        TimeZone.setDefault(TimeZone.getTimeZone(Configuration.TIME_ZONE_ID));
 
         Configuration configuration = Configuration.fromEnvironment();
+
+        // TODO configure modules
 
         RxRatpack.initialize();
 

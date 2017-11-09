@@ -1,5 +1,9 @@
 package net.scottpullen;
 
+import java.time.Duration;
+import java.time.ZoneId;
+import java.util.Optional;
+
 public class Configuration {
 
     public static final ZoneId TIME_ZONE_ID = ZoneId.of("UTC");
@@ -18,6 +22,8 @@ public class Configuration {
 
     public static final Integer JWT_TTL = 21600;
 
+    public static final int SCHEDULED_THREAD_POOL_SIZE = 3;
+
     public static final int MAX_RABBIT_CONSUMER_THREADS = 10;
 
     private final Environment environment;
@@ -34,7 +40,7 @@ public class Configuration {
         private String jwtSigningKey;
 
         public Builder withEnvironment(final String environment) {
-            this.environment = Optional.ofNullable(environment)
+            this.environment = Optional.ofNullable(environment);
             return this;
         }
 
@@ -98,7 +104,7 @@ public class Configuration {
     }
 
     public static Configuration fromEnvironment() {
-        Configuration.builder()
+        return Configuration.builder()
             .withEnvironment(System.getenv("ENVIRONMENT"))
             .withDatabaseUrl(System.getenv("TODOS_DATABASE_URL"))
             .withDatabaseUsername(System.getenv("TODOS_DATABASE_USERNAME"))

@@ -10,7 +10,7 @@ buildscript {
     dependencies {
         classpath 'io.ratpack:ratpack-gradle:1.5.0'
         classpath 'org.postgresql:postgresql:42.1.4'
-        classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
+        classpath 'gradle.plugin.com.boxfuse.client:flyway-release:4.2.0'
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
     }
 }
@@ -19,7 +19,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'groovy'
 apply plugin: 'io.ratpack.ratpack-java'
-apply plugin: "org.flywaydb.flyway"
+//apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.github.johnrengelman.shadow"
 
 repositories {
@@ -35,7 +35,7 @@ dependencies {
 
     compile 'org.postgresql:postgresql:42.1.4'
     compile 'org.jooq:jooq:3.10.1'
-    compile 'org.flywaydb:flyway-core:4.2.0'
+    //compile 'org.flywaydb:flyway-core:4.2.0'
     compile "com.rabbitmq:amqp-client:4.1.1"
     compile 'com.lambdaworks:scrypt:1.4.0'
     compile 'io.jsonwebtoken:jjwt:0.7.0'
@@ -52,7 +52,7 @@ dependencies {
     testCompile ratpack.dependency('test')
 }
 
-mainClassName = 'scottpullen.net.App'
+mainClassName = 'net.scottpullen.App'
 
 flyway {
     url = 'jdbc:postgresql:reactive_todos'

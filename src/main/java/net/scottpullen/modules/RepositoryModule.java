@@ -1,5 +1,11 @@
 package net.scottpullen.modules;
 
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import net.scottpullen.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import static net.scottpullen.Configuration.CONNECTION_TEST_QUERY;
 import static net.scottpullen.Configuration.DB_CONNECTION_TIMEOUT;
 import static net.scottpullen.Configuration.MAX_DB_CONNECTIONS;
