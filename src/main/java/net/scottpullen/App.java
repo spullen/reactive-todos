@@ -1,5 +1,7 @@
 package net.scottpullen;
 
+import net.scottpullen.modules.DatabaseModule;
+import net.scottpullen.modules.ObjectMapperModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ratpack.rx2.RxRatpack;
@@ -20,11 +22,19 @@ public class App {
 
         Configuration configuration = Configuration.fromEnvironment();
 
+        ObjectMapperModule objectMapperModule = new ObjectMapperModule();
+        DatabaseModule databaseModule = new DatabaseModule(configuration);
+
         // TODO configure modules
 
         RxRatpack.initialize();
 
         RatpackServer.start(spec -> {
+            spec.registryOf(registry -> registry
+                .add(DatabaseModule.class, databaseModule)
+                .add(ObjectMapperModule.class, objectMapperModule)
+            );
+
             spec.handlers(chain -> {
                 chain
                     .get(ctx -> ctx.render("Hello World!"))

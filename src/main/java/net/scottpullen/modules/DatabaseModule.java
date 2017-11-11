@@ -3,17 +3,13 @@ package net.scottpullen.modules;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import net.scottpullen.Configuration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static net.scottpullen.Configuration.CONNECTION_TEST_QUERY;
 import static net.scottpullen.Configuration.DB_CONNECTION_TIMEOUT;
 import static net.scottpullen.Configuration.MAX_DB_CONNECTIONS;
 import static net.scottpullen.Configuration.MIN_DB_CONNECTIONS;
 
-public class RepositoryModule {
-    private static final Logger log = LoggerFactory.getLogger(RepositoryModule.class);
-
+public class DatabaseModule {
     private final HikariDataSource dataSource;
 
     private HikariDataSource createDataSource(final Configuration configuration) {
@@ -29,9 +25,11 @@ public class RepositoryModule {
         return new HikariDataSource(dataSourceConfig);
     }
 
-    public RepositoryModule(final Configuration configuration) {
+    public DatabaseModule(final Configuration configuration) {
         dataSource = createDataSource(configuration);
+    }
 
-        // TODO configure other repositories
+    public HikariDataSource getDataSource() {
+        return this.dataSource;
     }
 }
