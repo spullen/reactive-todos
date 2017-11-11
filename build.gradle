@@ -54,11 +54,13 @@ dependencies {
 
 mainClassName = 'net.scottpullen.App'
 
+/*
 flyway {
     url = 'jdbc:postgresql:reactive_todos'
     user = 'admin'
     password = ''
 }
+*/
 
 test {
     systemProperty 'app.env', 'test'
