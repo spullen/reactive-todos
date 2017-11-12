@@ -4,6 +4,7 @@ CREATE TABLE tasks (
   content TEXT,
   status TEXT NOT NULL,
   due_date timestamp without time zone,
+  completed_at timestamp without time zone,
   created_at timestamp without time zone,
   updated_at timestamp without time zone
 );
