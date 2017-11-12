@@ -1,6 +1,7 @@
 package net.scottpullen;
 
 import net.scottpullen.modules.DatabaseModule;
+import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +23,7 @@ public class App {
 
         Configuration configuration = Configuration.fromEnvironment();
 
+        ExecutorModule executorModule = new ExecutorModule();
         ObjectMapperModule objectMapperModule = new ObjectMapperModule();
         DatabaseModule databaseModule = new DatabaseModule(configuration);
 
@@ -31,15 +33,15 @@ public class App {
 
         RatpackServer.start(spec -> {
             spec.registryOf(registry -> registry
+                .add(ExecutorModule.class, executorModule)
                 .add(DatabaseModule.class, databaseModule)
                 .add(ObjectMapperModule.class, objectMapperModule)
             );
 
-            spec.handlers(chain -> {
-                chain
-                    .get(ctx -> ctx.render("Hello World!"))
-                    .get(":name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"));
-            });
+            spec.handlers(chain -> chain
+                .get(ctx -> ctx.render("Hello World!"))
+                .get(":name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
+            );
         });
     }
 }

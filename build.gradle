@@ -55,9 +55,9 @@ dependencies {
 mainClassName = 'net.scottpullen.App'
 
 flyway {
-    url = 'jdbc:postgresql:reactive_todos'
-    user = 'admin'
-    password = ''
+    url = System.getenv('TODOS_DATABASE_URL')
+    user = System.getenv('TODOS_DATABASE_USERNAME')
+    password = System.getenv('TODOS_DATABASE_USERNAME')
 }
 
 test {
