@@ -3,6 +3,8 @@ package net.scottpullen;
 import net.scottpullen.modules.DatabaseModule;
 import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
+import net.scottpullen.repositories.JooqUserRepository;
+import net.scottpullen.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ratpack.rx2.RxRatpack;
@@ -26,6 +28,8 @@ public class App {
         ExecutorModule executorModule = new ExecutorModule();
         ObjectMapperModule objectMapperModule = new ObjectMapperModule();
         DatabaseModule databaseModule = new DatabaseModule(configuration);
+
+        UserRepository userRepository = new JooqUserRepository(databaseModule.getDataSource());
 
         // TODO configure modules
 
