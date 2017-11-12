@@ -19,7 +19,7 @@ apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'groovy'
 apply plugin: 'io.ratpack.ratpack-java'
-//apply plugin: 'org.flywaydb.flyway'
+apply plugin: 'org.flywaydb.flyway'
 apply plugin: "com.github.johnrengelman.shadow"
 
 repositories {
@@ -54,20 +54,22 @@ dependencies {
 
 mainClassName = 'net.scottpullen.App'
 
-/*
 flyway {
     url = 'jdbc:postgresql:reactive_todos'
     user = 'admin'
     password = ''
 }
-*/
 
 test {
     systemProperty 'app.env', 'test'
 }
 
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3.1'
+}
+
 run {
-    systemProperty 'app.env', 'dev'
+    systemProperty 'app.env', 'development'
 }
 
 shadowJar {
