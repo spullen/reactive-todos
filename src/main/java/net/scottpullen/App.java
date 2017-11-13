@@ -38,7 +38,7 @@ public class App {
 
         RegistrationService registrationService = new RegistrationService(userRepository);
 
-        RegistrationChain registrationChain = new RegistrationChain();
+        RegistrationChain registrationChain = new RegistrationChain(registrationService);
         SessionChain sessionChain = new SessionChain();
 
         AuthenticationHandler authenticationHandler = new AuthenticationHandler();
