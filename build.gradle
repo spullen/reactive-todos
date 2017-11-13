@@ -41,6 +41,7 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt:0.7.0'
     compile 'com.baidu.unbiz:fluent-validator:1.0.9'
     compile 'com.google.guava:guava:23.0'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.6'
 
     compile 'me.drmaas:ratpack-rx2:0.5.0'
     compile ratpack.dependency('hikari')

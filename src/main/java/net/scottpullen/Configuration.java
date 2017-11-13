@@ -20,7 +20,13 @@ public class Configuration {
 
     public static final int MAX_DB_CONNECTIONS = 30;
 
+    public static final String JWT_USER_OBJECT_ID_CLAIM = "userId";
+
     public static final Integer JWT_TTL = 21600;
+
+    public static final String BEARER_AUTHORIZATION_SCHEMA_KEY = "Bearer";
+
+    public static final String BEARER_AUTHORIZATION_PREFIX = BEARER_AUTHORIZATION_SCHEMA_KEY + " ";
 
     public static final int SCHEDULED_THREAD_POOL_SIZE = 3;
 
