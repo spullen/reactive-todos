@@ -17,7 +17,13 @@ public class RegistrationService {
 
     public Single<Optional<AuthenticationToken>> perform(RegistrationCommand command) {
         return Single.create(subscriber -> {
+            try {
+                AuthenticationToken token = new AuthenticationToken("test-test-test");
 
+                subscriber.onSuccess(Optional.of(token));
+            } catch(Exception e) {
+                subscriber.onError(e);
+            }
         });
     }
 }
