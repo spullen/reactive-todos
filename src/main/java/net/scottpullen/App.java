@@ -3,6 +3,7 @@ package net.scottpullen;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.scottpullen.handlers.AuthenticationHandler;
 import net.scottpullen.handlers.RegistrationChain;
+import net.scottpullen.handlers.RegistrationHandler;
 import net.scottpullen.handlers.SessionChain;
 import net.scottpullen.modules.DatabaseModule;
 import net.scottpullen.modules.ExecutorModule;
@@ -37,8 +38,10 @@ public class App {
         UserRepository userRepository = new JooqUserRepository(databaseModule.getDataSource());
 
         RegistrationService registrationService = new RegistrationService(userRepository);
+        RegistrationHandler registrationHandler = new RegistrationHandler(executorModule, registrationService);
+        RegistrationChain registrationChain = new RegistrationChain();
 
-        RegistrationChain registrationChain = new RegistrationChain(registrationService);
+
         SessionChain sessionChain = new SessionChain();
 
         AuthenticationHandler authenticationHandler = new AuthenticationHandler();
@@ -53,21 +56,20 @@ public class App {
                 .add(DatabaseModule.class, databaseModule)
                 .add(ObjectMapperModule.class, objectMapperModule)
                 .add(ObjectMapper.class, objectMapperModule.getObjectMapper())
+                .add(RegistrationHandler.class, registrationHandler)
                 .add(RegistrationChain.class, registrationChain)
                 .add(SessionChain.class, sessionChain)
                 .add(AuthenticationHandler.class, authenticationHandler)
             );
 
             spec.handlers(chain -> chain
+                .get(":name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
                 .prefix("api/registration", RegistrationChain.class)
                 .prefix("api/session", SessionChain.class)
-
+                .all(AuthenticationHandler.class)
                 .prefix("api", api -> api
-                    .all(AuthenticationHandler.class)
+                    .get("test", ctx -> ctx.render("Here in API"))
                 )
-
-                .get(ctx -> ctx.render("Hello World!"))
-                .get(":name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
             );
         });
     }

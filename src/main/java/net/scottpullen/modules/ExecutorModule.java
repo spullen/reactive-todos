@@ -21,7 +21,6 @@ public class ExecutorModule implements AutoCloseable {
     private final ScheduledExecutorService scheduledExecutor;
     private final Scheduler dataAndMessagingScheduler;
 
-
     public ExecutorModule() {
         executor = Executors.newFixedThreadPool(MAX_DB_CONNECTIONS + MAX_RABBIT_CONSUMER_THREADS);
         scheduledExecutor = Executors.newScheduledThreadPool(SCHEDULED_THREAD_POOL_SIZE);

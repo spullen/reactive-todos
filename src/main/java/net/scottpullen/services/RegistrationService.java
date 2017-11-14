@@ -1,7 +1,7 @@
 package net.scottpullen.services;
 
 import io.reactivex.Completable;
-import net.scottpullen.commands.CreateRegistrationCommand;
+import net.scottpullen.commands.RegistrationCommand;
 import net.scottpullen.repositories.UserRepository;
 
 public class RegistrationService {
@@ -12,7 +12,7 @@ public class RegistrationService {
         this.userRepository = userRepository;
     }
 
-    public Completable perform(CreateRegistrationCommand command) {
+    public Completable perform(RegistrationCommand command) {
         return Completable.create(subscriber -> {
 
         });

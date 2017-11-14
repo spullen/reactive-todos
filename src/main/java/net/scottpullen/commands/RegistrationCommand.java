@@ -2,7 +2,7 @@ package net.scottpullen.commands;
 
 import java.io.Serializable;
 
-public class CreateRegistrationCommand implements Serializable {
+public class RegistrationCommand implements Serializable {
     private String email;
     private String fullName;
     private String password;
@@ -13,11 +13,11 @@ public class CreateRegistrationCommand implements Serializable {
     public String getPassword() { return this.password; }
     public String getPasswordConfirmation() { return this.passwordConfirmation; }
 
-    public CreateRegistrationCommand() {
+    public RegistrationCommand() {
         super();
     }
 
-    public CreateRegistrationCommand(String email, String fullName, String password, String passwordConfirmation) {
+    public RegistrationCommand(String email, String fullName, String password, String passwordConfirmation) {
         this.email = email;
         this.fullName = fullName;
         this.password = password;
