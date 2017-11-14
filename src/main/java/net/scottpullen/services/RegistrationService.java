@@ -1,8 +1,11 @@
 package net.scottpullen.services;
 
-import io.reactivex.Completable;
+import io.reactivex.Single;
 import net.scottpullen.commands.RegistrationCommand;
+import net.scottpullen.entities.AuthenticationToken;
 import net.scottpullen.repositories.UserRepository;
+
+import java.util.Optional;
 
 public class RegistrationService {
 
@@ -12,8 +15,8 @@ public class RegistrationService {
         this.userRepository = userRepository;
     }
 
-    public Completable perform(RegistrationCommand command) {
-        return Completable.create(subscriber -> {
+    public Single<Optional<AuthenticationToken>> perform(RegistrationCommand command) {
+        return Single.create(subscriber -> {
 
         });
     }

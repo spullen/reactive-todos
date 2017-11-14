@@ -25,6 +25,7 @@ public class RegistrationHandler implements Handler {
         ctx.parse(fromJson(RegistrationCommand.class))
             .to(RxRatpack::observe)
             .observeOn(scheduler)
+            .map(command -> registrationService.perform(command))
             .compose(RxRatpack::bindExec)
             .subscribe(
                 result -> ctx.render("HERE"),
