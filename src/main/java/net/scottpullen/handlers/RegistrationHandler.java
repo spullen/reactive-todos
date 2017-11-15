@@ -1,7 +1,9 @@
 package net.scottpullen.handlers;
 
+import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.commands.RegistrationCommand;
+import net.scottpullen.exceptions.DataAccessException;
 import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.services.RegistrationService;
 import org.slf4j.Logger;
@@ -27,6 +29,9 @@ public class RegistrationHandler implements Handler {
     @Override
     public void handle(Context ctx) throws Exception {
         ctx.parse(fromJson(RegistrationCommand.class))
+            .onError((Throwable t) -> {
+                ctx.clientError(HttpResponseStatus.BAD_REQUEST.code());
+            })
             .to(RxRatpack::single)
             .observeOn(scheduler)
             .flatMap(registrationService::perform)
@@ -37,10 +42,14 @@ public class RegistrationHandler implements Handler {
                     if(maybeToken.isPresent()) {
                         ctx.render(json(maybeToken.get()));
                     } else {
-                        ctx.render("Failed...");
+                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                        // Render something useful
+                        ctx.render("Failed to register user");
                     }
                 },
-                error -> ctx.error(error)
+                error -> {
+                    ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                }
             );
     }
 }
