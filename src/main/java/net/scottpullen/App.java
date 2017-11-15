@@ -11,6 +11,7 @@ import net.scottpullen.modules.ObjectMapperModule;
 import net.scottpullen.repositories.JooqUserRepository;
 import net.scottpullen.repositories.UserRepository;
 import net.scottpullen.services.RegistrationService;
+import net.scottpullen.services.TokenGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ratpack.rx2.RxRatpack;
@@ -35,12 +36,17 @@ public class App {
         ObjectMapperModule objectMapperModule = new ObjectMapperModule();
         DatabaseModule databaseModule = new DatabaseModule(configuration);
 
+        TokenGeneratorService tokenGeneratorService = new TokenGeneratorService(
+            Configuration.JWT_USER_OBJECT_ID_CLAIM,
+            configuration.getJwtSigningKey(),
+            Configuration.JWT_TTL
+        );
+
         UserRepository userRepository = new JooqUserRepository(databaseModule.getDataSource());
 
-        RegistrationService registrationService = new RegistrationService(userRepository);
+        RegistrationService registrationService = new RegistrationService(tokenGeneratorService, userRepository);
         RegistrationHandler registrationHandler = new RegistrationHandler(executorModule, registrationService);
         RegistrationChain registrationChain = new RegistrationChain();
-
 
         SessionChain sessionChain = new SessionChain();
 
@@ -63,11 +69,11 @@ public class App {
             );
 
             spec.handlers(chain -> chain
-                .get(":name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
+                .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
                 .prefix("api/registration", RegistrationChain.class)
                 .prefix("api/session", SessionChain.class)
-                .all(AuthenticationHandler.class)
                 .prefix("api", api -> api
+                    .all(AuthenticationHandler.class)
                     .get("test", ctx -> ctx.render("Here in API"))
                 )
             );

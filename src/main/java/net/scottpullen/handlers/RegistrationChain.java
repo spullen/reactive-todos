@@ -7,6 +7,6 @@ public class RegistrationChain implements Action<Chain> {
 
     @Override
     public void execute(Chain chain) {
-        chain.post("api/register", RegistrationHandler.class);
+        chain.post("", RegistrationHandler.class);
     }
 }
