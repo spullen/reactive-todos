@@ -10,14 +10,16 @@ public class User {
     private final UserId id;
     private final String email;
     private final String fullName;
+    private final String passwordDigest;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public User(final UserId id, final String email, final String fullName, final LocalDateTime createdAt,
-                final LocalDateTime updatedAt) {
+    public User(final UserId id, final String email, final String fullName, final String passwordDigest,
+                final LocalDateTime createdAt, final LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.fullName = fullName;
+        this.passwordDigest = passwordDigest;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -33,6 +35,8 @@ public class User {
     public String getFullName() {
         return fullName;
     }
+
+    public String getPasswordDigest() { return passwordDigest; }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
@@ -56,6 +60,7 @@ public class User {
                 .append(id, otherUser.getId())
                 .append(email, otherUser.getEmail())
                 .append(fullName, otherUser.getFullName())
+                .append(passwordDigest, otherUser.getPasswordDigest())
                 .append(createdAt, otherUser.getCreatedAt())
                 .append(updatedAt, otherUser.getUpdatedAt())
                 .isEquals();
@@ -68,6 +73,7 @@ public class User {
             .append(id)
             .append(email)
             .append(fullName)
+            .append(passwordDigest)
             .append(createdAt)
             .append(updatedAt)
             .toHashCode();
@@ -75,7 +81,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User(id: " + id.toString() + ", email: " + email + ", fullName: " + fullName
-            + ", createdAt: " + createdAt + ", updatedAt: " + updatedAt + ")";
+        return "User(id: " + id.toString() + ", email: " + email + ", fullName: " + fullName + ", passwordDigest: "
+            + passwordDigest + ", createdAt: " + createdAt + ", updatedAt: " + updatedAt + ")";
     }
 }

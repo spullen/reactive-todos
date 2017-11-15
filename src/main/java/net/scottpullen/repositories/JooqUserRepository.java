@@ -6,8 +6,8 @@ import net.scottpullen.entities.User;
 import net.scottpullen.entities.UserId;
 import net.scottpullen.exceptions.DataAccessException;
 import net.scottpullen.exceptions.UniqueConstraintException;
+import net.scottpullen.tables.Users;
 import org.jooq.DSLContext;
-import org.jooq.Package;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
@@ -29,9 +29,20 @@ public class JooqUserRepository implements UserRepository {
     public Completable create(User user) {
         return Completable.create(subscriber -> {
             try {
-                // TODO insert
+                jooq.transaction(configuration -> {
+                    DSLContext transaction = DSL.using(configuration);
 
-                subscriber.onComplete();
+                    transaction.insertInto(Users.TABLE)
+                        .set(Users.ID, user.getId().getValue())
+                        .set(Users.EMAIL, user.getEmail())
+                        .set(Users.FULL_NAME, user.getFullName())
+                        .set(Users.PASSWORD_DIGEST, user.getPasswordDigest())
+                        .set(Users.CREATED_AT, user.getCreatedAt())
+                        .set(Users.UPDATED_AT, user.getUpdatedAt())
+                        .execute();
+
+                    subscriber.onComplete();
+                });
             } catch(org.jooq.exception.DataAccessException e) {
                 subscriber.onError(translateException(e));
             } catch(Exception e) {
@@ -44,9 +55,18 @@ public class JooqUserRepository implements UserRepository {
     public Completable update(User user) {
         return Completable.create(subscriber -> {
             try {
-                // TODO update
+                jooq.transaction(configuration -> {
+                    DSLContext transaction = DSL.using(configuration);
 
-                subscriber.onComplete();
+                    transaction.update(Users.TABLE)
+                        .set(Users.FULL_NAME, user.getFullName())
+                        .set(Users.PASSWORD_DIGEST, user.getPasswordDigest())
+                        .set(Users.UPDATED_AT, user.getUpdatedAt())
+                        .where(Users.ID.equal(user.getId().getValue()))
+                        .execute();
+
+                    subscriber.onComplete();
+                });
             } catch(org.jooq.exception.DataAccessException e) {
                 subscriber.onError(translateException(e));
             } catch(Exception e) {
@@ -57,22 +77,86 @@ public class JooqUserRepository implements UserRepository {
 
     @Override
     public Single<Optional<User>> findById(UserId id) {
-        return null;
+        return Single.create(subscriber -> {
+            try {
+                Optional<User> maybeUser = jooq.select(
+                        Users.ID,
+                        Users.EMAIL,
+                        Users.FULL_NAME,
+                        Users.PASSWORD_DIGEST,
+                        Users.CREATED_AT,
+                        Users.UPDATED_AT
+                    )
+                    .from(Users.TABLE)
+                    .where(Users.ID.equal(id.getValue()))
+                    .fetchOptionalInto(User.class);
+
+                subscriber.onSuccess(maybeUser);
+            } catch (DataAccessException e) {
+                throw e;
+            } catch (Exception e) {
+                subscriber.onError(new DataAccessException("Failed to find user by id", e));
+            }
+        });
     }
 
     @Override
     public Single<Optional<User>> findByEmail(String email) {
-        return null;
+        return Single.create(subscriber -> {
+            try {
+                Optional<User> maybeUser = jooq.select(
+                    Users.ID,
+                    Users.EMAIL,
+                    Users.FULL_NAME,
+                    Users.PASSWORD_DIGEST,
+                    Users.CREATED_AT,
+                    Users.UPDATED_AT
+                )
+                .from(Users.TABLE)
+                .where(Users.EMAIL.equal(email))
+                .fetchOptionalInto(User.class);
+
+                subscriber.onSuccess(maybeUser);
+            } catch (DataAccessException e) {
+                throw e;
+            } catch (Exception e) {
+                subscriber.onError(new DataAccessException("Failed to find user by email", e));
+            }
+        });
     }
 
     @Override
     public Single<Boolean> existsById(UserId id) {
-        return null;
+        return Single.create(subscriber -> {
+            try {
+                Boolean exists = jooq.fetchExists(
+                    jooq.select().from(Users.TABLE).where(Users.ID.equal(id.getValue())).limit(1)
+                );
+
+                subscriber.onSuccess(exists);
+            } catch (DataAccessException e) {
+                throw e;
+            } catch (Exception e) {
+                subscriber.onError(new DataAccessException("Failed to check existence of user by id", e));
+            }
+        });
     }
 
     @Override
     public Single<Boolean> existsByEmail(String email) {
-        return null;
+        return Single.create(subscriber -> {
+            try {
+                Boolean exists = jooq.fetchExists(
+                    jooq.select().from(Users.TABLE).where(Users.EMAIL.equal(email)).limit(1)
+                );
+
+                subscriber.onSuccess(exists);
+            } catch (DataAccessException e) {
+                throw e;
+            } catch (Exception e) {
+                subscriber.onError(new DataAccessException("Failed to check existence of user by email", e));
+            }
+        });
     }
 
     private Throwable translateException(final BatchUpdateException exception) {
