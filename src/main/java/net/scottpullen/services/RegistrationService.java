@@ -4,11 +4,11 @@ import io.reactivex.Single;
 import net.scottpullen.commands.RegistrationCommand;
 import net.scottpullen.entities.AuthenticationToken;
 import net.scottpullen.entities.UserId;
-import net.scottpullen.exceptions.DataAccessException;
 import net.scottpullen.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,11 +28,14 @@ public class RegistrationService {
         return Single.create(subscriber -> {
             try {
                 UserId id = new UserId(UUID.randomUUID());
+                LocalDateTime createdAt = LocalDateTime.now();
 
-                log.warn("ID: {}", id);
+                log.warn("ID: {}, {}", id, createdAt);
 
                 // validate command
                 // generate user id
+                // set created at, updated at on user
+                // build user
                 // create user
                 // generate token
                 // return token
