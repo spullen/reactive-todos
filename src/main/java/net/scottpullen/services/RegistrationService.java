@@ -3,6 +3,7 @@ package net.scottpullen.services;
 import io.reactivex.Single;
 import net.scottpullen.commands.RegistrationCommand;
 import net.scottpullen.entities.AuthenticationToken;
+import net.scottpullen.entities.User;
 import net.scottpullen.entities.UserId;
 import net.scottpullen.repositories.UserRepository;
 import org.slf4j.Logger;
@@ -32,7 +33,19 @@ public class RegistrationService {
 
                 log.warn("ID: {}, {}", id, createdAt);
 
+                User user = new User(
+                    id,
+                    command.getEmail(),
+                    command.getFullName(),
+                    PasswordHashingService.perform(command.getPassword()),
+                    createdAt,
+                    createdAt
+                );
+
+                log.warn("USER: {}", user);
+
                 // validate command
+                // hash password
                 // generate user id
                 // set created at, updated at on user
                 // build user
