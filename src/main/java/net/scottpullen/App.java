@@ -10,7 +10,9 @@ import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
 import net.scottpullen.repositories.JooqUserRepository;
 import net.scottpullen.repositories.UserRepository;
+import net.scottpullen.services.AuthenticationService;
 import net.scottpullen.services.RegistrationService;
+import net.scottpullen.services.SessionService;
 import net.scottpullen.services.TokenGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +50,10 @@ public class App {
         RegistrationHandler registrationHandler = new RegistrationHandler(executorModule, registrationService);
         RegistrationChain registrationChain = new RegistrationChain();
 
+        SessionService sessionService = new SessionService(tokenGeneratorService, userRepository);
         SessionChain sessionChain = new SessionChain();
 
+        AuthenticationService authenticationService = new AuthenticationService(configuration);
         AuthenticationHandler authenticationHandler = new AuthenticationHandler();
 
         // TODO configure modules/action chains/handlers
