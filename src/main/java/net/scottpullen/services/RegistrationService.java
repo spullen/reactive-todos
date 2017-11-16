@@ -26,37 +26,32 @@ public class RegistrationService {
     }
 
     public Single<Optional<AuthenticationToken>> perform(RegistrationCommand command) {
-        return Single.create(subscriber -> {
-            try {
-                UserId id = new UserId(UUID.randomUUID());
-                LocalDateTime createdAt = LocalDateTime.now();
+        UserId id = new UserId(UUID.randomUUID());
+        LocalDateTime createdAt = LocalDateTime.now();
 
-                log.warn("ID: {}, {}", id, createdAt);
+        log.warn("ID: {}, {}", id, createdAt);
 
-                User user = new User(
-                    id,
-                    command.getEmail(),
-                    command.getFullName(),
-                    PasswordHashingService.perform(command.getPassword()),
-                    createdAt,
-                    createdAt
-                );
+        User user = new User(
+            id,
+            command.getEmail(),
+            command.getFullName(),
+            PasswordHashingService.perform(command.getPassword()),
+            createdAt,
+            createdAt
+        );
 
-                log.warn("USER: {}", user);
+        log.warn("USER: {}", user);
 
-                // validate command
-                // hash password
-                // generate user id
-                // set created at, updated at on user
-                // build user
-                // create user
-                // generate token
-                // return token
+        // validate command
+        // hash password
+        // generate user id
+        // set created at, updated at on user
+        // build user
+        // create user
+        // generate token
+        // return token
 
-                subscriber.onSuccess(tokenGeneratorService.perform(id));
-            } catch(Exception e) {
-                subscriber.onError(e);
-            }
-        });
+        return userRepository.create(user)
+            .toSingle(() -> tokenGeneratorService.perform(id));
     }
 }
