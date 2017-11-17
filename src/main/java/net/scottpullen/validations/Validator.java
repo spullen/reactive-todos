@@ -1,14 +1,45 @@
 package net.scottpullen.validations;
 
-import io.reactivex.Observable;
+import io.reactivex.Completable;
+import net.scottpullen.entities.User;
+import net.scottpullen.entities.UserId;
 
-import java.util.function.BiConsumer;
+import java.time.LocalDateTime;
+import java.util.UUID;
+import java.util.function.Consumer;
 
-public class Validator {
+public class Validator<T> {
 
-    public <T> Observable<T> validate(final BiConsumer operation) {
-        return Observable.create(subscriber -> {
-            // TODO
+    private final T target;
+
+    public Validator(final T target) {
+        this.target = target;
+    }
+
+    public Completable validate(final Consumer<ValidationContext> operation) {
+        return Completable.create(subscriber -> {
+            try {
+                ValidationContext<T> context = new ValidationContext<T>(target);
+                operation.accept(context);
+                subscriber.onComplete();
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
+
+    public static void test() {
+        User u = new User(
+            new UserId(UUID.randomUUID()),
+            "s.pullen05@gmail.com",
+            "Scott Pullen",
+            "password",
+            LocalDateTime.now(),
+            LocalDateTime.now()
+        );
+
+        (new Validator<User>(u)).validate(validationContext -> {
+            
         });
     }
 }
