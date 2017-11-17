@@ -39,7 +39,9 @@ public class Validator<T> {
         );
 
         (new Validator<User>(u)).validate(validationContext -> {
-            
+            /*
+                validationContext.presence("email", validationContext.getTarget().getEmail());
+            */
         });
     }
 }
