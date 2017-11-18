@@ -43,13 +43,7 @@ public class RegistrationService {
         log.warn("USER: {}", user);
 
         // validate command
-        // hash password
-        // generate user id
-        // set created at, updated at on user
-        // build user
         // create user
-        // generate token
-        // return token
 
         return userRepository.create(user)
             .toSingle(() -> tokenGeneratorService.perform(id));
