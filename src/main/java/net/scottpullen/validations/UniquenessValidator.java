@@ -1,4 +1,7 @@
 package net.scottpullen.validations;
 
-public class UniquenessValidator {
+public class UniquenessValidator extends Validator {
+    public void validate() {
+
+    }
 }

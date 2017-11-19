@@ -1,4 +1,7 @@
 package net.scottpullen.validations;
 
-public class AcceptanceValidator {
+public class AcceptanceValidator extends Validator {
+    public void validate() {
+
+    }
 }

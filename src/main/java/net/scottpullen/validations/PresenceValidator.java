@@ -1,4 +1,7 @@
 package net.scottpullen.validations;
 
-public class PresenceValidator {
+public class PresenceValidator extends Validator {
+    public void validate() {
+
+    }
 }
