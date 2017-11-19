@@ -32,18 +32,32 @@ public class ValidationContext<T> {
         return target;
     }
 
+    // value
     public ValidationContext acceptance() {
         return validate(new AcceptanceValidator());
     }
 
+    // value, otherValue
     public ValidationContext confirmation() {
         return validate(new ConfirmationValidator());
     }
 
+    // value, list/array
+    public ValidationContext exclusion() {
+        return validate(new ExclusionValidator());
+    }
+
+    // value, expression
     public ValidationContext format() {
         return validate(new FormatValidator());
     }
 
+    // value, list/array
+    public ValidationContext inclusion() {
+        return validate(new InclusionValidator());
+    }
+
+    // value,
     public ValidationContext length() {
         return validate(new LengthValidator());
     }
