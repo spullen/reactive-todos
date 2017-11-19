@@ -57,19 +57,22 @@ public class ValidationContext<T> {
         return validate(new InclusionValidator());
     }
 
-    // value,
+    // value, options
     public ValidationContext length() {
         return validate(new LengthValidator());
     }
 
+    // value, options
     public ValidationContext numericality() {
         return validate(new NumericalityValidator());
     }
 
+    // value, options
     public ValidationContext presence() {
         return validate(new PresenceValidator());
     }
 
+    // value, function
     public ValidationContext uniqueness() {
         return validate(new UniquenessValidator());
     }
