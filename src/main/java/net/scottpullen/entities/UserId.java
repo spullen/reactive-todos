@@ -6,4 +6,8 @@ public class UserId extends EntityId {
     public UserId(UUID id) {
         super(id);
     }
+
+    public UserId(String id) {
+        super(UUID.fromString(id));
+    }
 }

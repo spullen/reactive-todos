@@ -53,10 +53,8 @@ public class App {
         SessionService sessionService = new SessionService(tokenGeneratorService, userRepository);
         SessionChain sessionChain = new SessionChain();
 
-        AuthenticationService authenticationService = new AuthenticationService(configuration);
-        AuthenticationHandler authenticationHandler = new AuthenticationHandler();
-
-        // TODO configure modules/action chains/handlers
+        AuthenticationService authenticationService = new AuthenticationService(configuration, userRepository);
+        AuthenticationHandler authenticationHandler = new AuthenticationHandler(executorModule, authenticationService);
 
         RxRatpack.initialize();
 

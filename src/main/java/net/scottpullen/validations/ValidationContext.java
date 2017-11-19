@@ -68,7 +68,7 @@ public class ValidationContext<T> {
     }
 
     // value, options
-    public ValidationContext presence() {
+    public ValidationContext presence(String field, Object value) {
         return validate(new PresenceValidator());
     }
 
