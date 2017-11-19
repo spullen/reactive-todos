@@ -1,6 +1,7 @@
 package net.scottpullen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import net.scottpullen.entities.User;
 import net.scottpullen.handlers.AuthenticationHandler;
 import net.scottpullen.handlers.RegistrationChain;
 import net.scottpullen.handlers.RegistrationHandler;
@@ -76,7 +77,10 @@ public class App {
                 .prefix("api/session", SessionChain.class)
                 .prefix("api", api -> api
                     .all(AuthenticationHandler.class)
-                    .get("test", ctx -> ctx.render("Here in API"))
+                    .get("test", ctx -> {
+                        User user = ctx.get(User.class);
+                        ctx.render("Here in API. Hello, " + user.getFullName());
+                    })
                 )
             );
         });
