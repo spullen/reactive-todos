@@ -1,7 +1,7 @@
 package net.scottpullen.modules;
 
-import net.scottpullen.repositories.JooqUserRepository;
-import net.scottpullen.repositories.UserRepository;
+import net.scottpullen.users.repositories.JooqUserRepository;
+import net.scottpullen.users.repositories.UserRepository;
 
 public class UserModule {
 

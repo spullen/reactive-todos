@@ -1,23 +1,27 @@
 package net.scottpullen;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.scottpullen.entities.User;
-import net.scottpullen.handlers.AuthorizationHandler;
-import net.scottpullen.handlers.RegistrationChain;
-import net.scottpullen.handlers.RegistrationHandler;
-import net.scottpullen.handlers.SessionChain;
+import net.scottpullen.database.DatabaseConfig;
+import net.scottpullen.users.entities.User;
+import net.scottpullen.security.handlers.AuthorizationHandler;
+import net.scottpullen.users.chains.RegistrationChain;
+import net.scottpullen.users.handlers.RegistrationHandler;
+import net.scottpullen.security.chains.SessionChain;
 import net.scottpullen.modules.DatabaseModule;
 import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
-import net.scottpullen.repositories.JooqUserRepository;
-import net.scottpullen.repositories.UserRepository;
-import net.scottpullen.services.AuthorizationService;
-import net.scottpullen.services.RegistrationService;
-import net.scottpullen.services.SessionService;
-import net.scottpullen.services.TokenGeneratorService;
+import net.scottpullen.users.repositories.JooqUserRepository;
+import net.scottpullen.users.repositories.UserRepository;
+import net.scottpullen.security.JwtConfig;
+import net.scottpullen.security.SecurityModule;
+import net.scottpullen.security.services.AuthorizationService;
+import net.scottpullen.users.services.RegistrationService;
+import net.scottpullen.security.services.SessionService;
+import net.scottpullen.security.services.TokenGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ratpack.guice.Guice;
 import ratpack.rx2.RxRatpack;
+import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 
 import java.util.TimeZone;
@@ -60,6 +64,22 @@ public class App {
         RxRatpack.initialize();
 
         RatpackServer.start(spec -> {
+            spec.serverConfig(config -> {
+                config.baseDir(BaseDir.find())
+                    .yaml("database.yaml")
+                    .yaml("jwt.yaml")
+                    .env()
+                    .sysProps()
+                    .require("/db", DatabaseConfig.class)
+                    .require("/jwt", JwtConfig.class);
+            });
+
+            spec.registry(Guice.registry(bindings -> bindings
+                .add(DatabaseModule.class)
+                .add(SecurityModule.class)
+            ));
+
+            /*
             spec.registryOf(registry -> registry
                 .add(ExecutorModule.class, executorModule)
                 .add(DatabaseModule.class, databaseModule)
@@ -70,6 +90,7 @@ public class App {
                 .add(SessionChain.class, sessionChain)
                 .add(AuthorizationHandler.class, authenticationHandler)
             );
+            */
 
             spec.handlers(chain -> chain
                 .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))

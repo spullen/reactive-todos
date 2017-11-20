@@ -5,12 +5,12 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
-import net.scottpullen.entities.EntityId;
-import net.scottpullen.entities.TaskId;
-import net.scottpullen.entities.UserId;
-import net.scottpullen.utils.deserializers.TaskIdDeserializer;
-import net.scottpullen.utils.deserializers.UserIdDeserializer;
-import net.scottpullen.utils.serializers.EntityIdSerializer;
+import net.scottpullen.common.entities.EntityId;
+import net.scottpullen.tasks.entities.TaskId;
+import net.scottpullen.users.entities.UserId;
+import net.scottpullen.common.deserializers.TaskIdDeserializer;
+import net.scottpullen.common.deserializers.UserIdDeserializer;
+import net.scottpullen.common.serializers.EntityIdSerializer;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
