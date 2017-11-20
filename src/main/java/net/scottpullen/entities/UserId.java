@@ -8,6 +8,6 @@ public class UserId extends EntityId {
     }
 
     public UserId(String id) {
-        super(UUID.fromString(id));
+        super(id);
     }
 }

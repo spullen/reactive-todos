@@ -5,21 +5,25 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.Configuration;
 import net.scottpullen.modules.ExecutorModule;
-import net.scottpullen.services.AuthenticationService;
+import net.scottpullen.services.AuthorizationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.http.Headers;
 import ratpack.registry.Registry;
 import ratpack.rx2.RxRatpack;
 
-public class AuthenticationHandler implements Handler {
+public class AuthorizationHandler implements Handler {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthorizationHandler.class);
 
     private final Scheduler scheduler;
-    private final AuthenticationService authenticationService;
+    private final AuthorizationService authorizationService;
 
-    public AuthenticationHandler(final ExecutorModule executorModule, final AuthenticationService authenticationService) {
+    public AuthorizationHandler(final ExecutorModule executorModule, final AuthorizationService authorizationService) {
         this.scheduler = executorModule.getDataAndMessagingScheduler();
-        this.authenticationService = authenticationService;
+        this.authorizationService = authorizationService;
     }
 
     @Override
@@ -38,18 +42,19 @@ public class AuthenticationHandler implements Handler {
 
             final String token = rawToken.replace(Configuration.BEARER_AUTHORIZATION_PREFIX, "");
 
-            authenticationService.perform(token)
+            authorizationService.perform(token)
                 .observeOn(scheduler)
                 .toObservable()
                 .compose(RxRatpack::bindExec)
                 .subscribe(
                     maybeUser -> {
-                        maybeUser.ifPresent(user -> ctx.next(Registry.single(user)));
-                        ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
+                        if(maybeUser.isPresent()) {
+                            ctx.next(Registry.single(maybeUser.get()));
+                        } else {
+                            ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
+                        }
                     },
-                    error -> {
-                        ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
-                    }
+                    error -> ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code())
                 );
         }
     }

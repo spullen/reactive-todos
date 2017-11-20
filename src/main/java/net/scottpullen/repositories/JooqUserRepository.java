@@ -62,7 +62,7 @@ public class JooqUserRepository implements UserRepository {
                         .set(Users.FULL_NAME, user.getFullName())
                         .set(Users.PASSWORD_DIGEST, user.getPasswordDigest())
                         .set(Users.UPDATED_AT, user.getUpdatedAt())
-                        .where(Users.ID.equal(user.getId().getValue()))
+                        .where(Users.ID.equal(user.getId()))
                         .execute();
 
                     subscriber.onComplete();
@@ -88,7 +88,8 @@ public class JooqUserRepository implements UserRepository {
                         Users.UPDATED_AT
                     )
                     .from(Users.TABLE)
-                    .where(Users.ID.equal(id.getValue()))
+                    .where(Users.ID.equal(id))
+                    .limit(1)
                     .fetchOptionalInto(User.class);
 
                 subscriber.onSuccess(maybeUser);
@@ -114,6 +115,7 @@ public class JooqUserRepository implements UserRepository {
                 )
                 .from(Users.TABLE)
                 .where(Users.EMAIL.equal(email))
+                .limit(1)
                 .fetchOptionalInto(User.class);
 
                 subscriber.onSuccess(maybeUser);
@@ -130,7 +132,7 @@ public class JooqUserRepository implements UserRepository {
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(
-                    jooq.select().from(Users.TABLE).where(Users.ID.equal(id.getValue())).limit(1)
+                    jooq.select().from(Users.TABLE).where(Users.ID.equal(id)).limit(1)
                 );
 
                 subscriber.onSuccess(exists);

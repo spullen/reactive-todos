@@ -6,15 +6,19 @@ import net.scottpullen.Configuration;
 import net.scottpullen.entities.User;
 import net.scottpullen.entities.UserId;
 import net.scottpullen.repositories.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public class AuthenticationService {
+public class AuthorizationService {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthorizationService.class);
 
     private final Configuration configuration;
     private final UserRepository userRepository;
 
-    public AuthenticationService(final Configuration configuration, final UserRepository userRepository) {
+    public AuthorizationService(final Configuration configuration, final UserRepository userRepository) {
         this.configuration = configuration;
         this.userRepository = userRepository;
     }
@@ -28,7 +32,7 @@ public class AuthenticationService {
                     .getBody()
                     .get(Configuration.JWT_USER_OBJECT_ID_CLAIM);
 
-                if(userIdFromToken != null && userIdFromToken.equals("")) {
+                if(userIdFromToken != null && !userIdFromToken.equals("")) {
                     UserId userId = new UserId(userIdFromToken);
                     userRepository.findById(userId)
                         .subscribe(subscriber::onSuccess, subscriber::onError); // Is there a better way to compose this??

@@ -9,6 +9,10 @@ public class EntityId {
         this.id = id;
     }
 
+    public EntityId(String id) {
+        this(UUID.fromString(id));
+    }
+
     public UUID getValue() {
         return id;
     }

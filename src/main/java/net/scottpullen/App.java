@@ -2,7 +2,7 @@ package net.scottpullen;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.scottpullen.entities.User;
-import net.scottpullen.handlers.AuthenticationHandler;
+import net.scottpullen.handlers.AuthorizationHandler;
 import net.scottpullen.handlers.RegistrationChain;
 import net.scottpullen.handlers.RegistrationHandler;
 import net.scottpullen.handlers.SessionChain;
@@ -11,7 +11,7 @@ import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
 import net.scottpullen.repositories.JooqUserRepository;
 import net.scottpullen.repositories.UserRepository;
-import net.scottpullen.services.AuthenticationService;
+import net.scottpullen.services.AuthorizationService;
 import net.scottpullen.services.RegistrationService;
 import net.scottpullen.services.SessionService;
 import net.scottpullen.services.TokenGeneratorService;
@@ -54,8 +54,8 @@ public class App {
         SessionService sessionService = new SessionService(tokenGeneratorService, userRepository);
         SessionChain sessionChain = new SessionChain();
 
-        AuthenticationService authenticationService = new AuthenticationService(configuration, userRepository);
-        AuthenticationHandler authenticationHandler = new AuthenticationHandler(executorModule, authenticationService);
+        AuthorizationService authorizationService = new AuthorizationService(configuration, userRepository);
+        AuthorizationHandler authenticationHandler = new AuthorizationHandler(executorModule, authorizationService);
 
         RxRatpack.initialize();
 
@@ -68,7 +68,7 @@ public class App {
                 .add(RegistrationHandler.class, registrationHandler)
                 .add(RegistrationChain.class, registrationChain)
                 .add(SessionChain.class, sessionChain)
-                .add(AuthenticationHandler.class, authenticationHandler)
+                .add(AuthorizationHandler.class, authenticationHandler)
             );
 
             spec.handlers(chain -> chain
@@ -76,7 +76,7 @@ public class App {
                 .prefix("api/registration", RegistrationChain.class)
                 .prefix("api/session", SessionChain.class)
                 .prefix("api", api -> api
-                    .all(AuthenticationHandler.class)
+                    .all(AuthorizationHandler.class)
                     .get("test", ctx -> {
                         User user = ctx.get(User.class);
                         ctx.render("Here in API. Hello, " + user.getFullName());
