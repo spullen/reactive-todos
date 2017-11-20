@@ -1,4 +1,10 @@
 package net.scottpullen.users;
 
-public class UsersModule {
+import com.google.inject.AbstractModule;
+
+public class UsersModule extends AbstractModule {
+    @Override
+    public void configure() {
+
+    }
 }

@@ -7,7 +7,7 @@ public class UserModule {
 
     private final UserRepository userRepository;
 
-    public UserModule(DatabaseModule databaseModule) {
+    public UserModule(OriginalDatabaseModule databaseModule) {
         userRepository = new JooqUserRepository(databaseModule.getDataSource());
         // TODO RegistrationService
 

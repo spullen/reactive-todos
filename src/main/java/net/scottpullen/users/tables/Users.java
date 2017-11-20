@@ -1,7 +1,8 @@
 package net.scottpullen.users.tables;
 
 import net.scottpullen.users.entities.UserId;
-import net.scottpullen.common.CustomDataTypes;
+import net.scottpullen.common.jooq.CustomDataTypes;
+import net.scottpullen.users.jooq.UsersDataTypes;
 import org.jooq.Field;
 import org.jooq.Table;
 import org.jooq.util.postgres.PostgresDataType;
@@ -14,7 +15,7 @@ import static org.jooq.impl.DSL.table;
 public class Users {
     public static final Table TABLE = table("users");
 
-    public static final Field<UserId> ID = field("id", CustomDataTypes.USER_ID);
+    public static final Field<UserId> ID = field("id", UsersDataTypes.USER_ID);
     public static final Field<String> EMAIL = field("email", PostgresDataType.TEXT);
     public static final Field<String> FULL_NAME = field("full_name", PostgresDataType.TEXT);
     public static final Field<String> PASSWORD_DIGEST = field("password_digest", PostgresDataType.TEXT);

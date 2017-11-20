@@ -1,12 +1,26 @@
 package net.scottpullen;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import net.scottpullen.common.deserializers.TaskIdDeserializer;
+import net.scottpullen.common.deserializers.UserIdDeserializer;
+import net.scottpullen.common.entities.EntityId;
+import net.scottpullen.common.serializers.EntityIdSerializer;
 import net.scottpullen.database.DatabaseConfig;
+import net.scottpullen.database.DatabaseModule;
+import net.scottpullen.modules.OriginalDatabaseModule;
+import net.scottpullen.tasks.TasksModule;
+import net.scottpullen.tasks.entities.TaskId;
+import net.scottpullen.users.UsersModule;
 import net.scottpullen.users.entities.User;
 import net.scottpullen.security.handlers.AuthorizationHandler;
 import net.scottpullen.users.chains.RegistrationChain;
+import net.scottpullen.users.entities.UserId;
 import net.scottpullen.users.handlers.RegistrationHandler;
 import net.scottpullen.security.chains.SessionChain;
-import net.scottpullen.modules.DatabaseModule;
 import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.modules.ObjectMapperModule;
 import net.scottpullen.users.repositories.JooqUserRepository;
@@ -24,6 +38,8 @@ import ratpack.rx2.RxRatpack;
 import ratpack.server.BaseDir;
 import ratpack.server.RatpackServer;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
 public class App {
@@ -41,7 +57,7 @@ public class App {
 
         ExecutorModule executorModule = new ExecutorModule();
         ObjectMapperModule objectMapperModule = new ObjectMapperModule();
-        DatabaseModule databaseModule = new DatabaseModule(configuration);
+        OriginalDatabaseModule databaseModule = new OriginalDatabaseModule(configuration);
 
         TokenGeneratorService tokenGeneratorService = new TokenGeneratorService(
             Configuration.JWT_USER_OBJECT_ID_CLAIM,
@@ -75,14 +91,25 @@ public class App {
             });
 
             spec.registry(Guice.registry(bindings -> bindings
-                .add(DatabaseModule.class)
-                .add(SecurityModule.class)
+                .module(DatabaseModule.class)
+                .module(SecurityModule.class)
+                .module(UsersModule.class)
+                .module(TasksModule.class)
+                .add(ObjectMapper.class, new ObjectMapper()
+                    .registerModule(new Jdk8Module())
+                    .registerModule(new SimpleModule()
+                        .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
+                        .addDeserializer(LocalDateTime.class, LocalDateTimeDeserializer.INSTANCE)
+                        .addSerializer(EntityId.class, EntityIdSerializer.INSTANCE)
+                        .addDeserializer(UserId.class, UserIdDeserializer.INSTANCE)
+                        .addDeserializer(TaskId.class, TaskIdDeserializer.INSTANCE)
+                    ))
             ));
 
             /*
             spec.registryOf(registry -> registry
                 .add(ExecutorModule.class, executorModule)
-                .add(DatabaseModule.class, databaseModule)
+                .add(OriginalDatabaseModule.class, databaseModule)
                 .add(ObjectMapperModule.class, objectMapperModule)
                 .add(ObjectMapper.class, objectMapperModule.getObjectMapper())
                 .add(RegistrationHandler.class, registrationHandler)

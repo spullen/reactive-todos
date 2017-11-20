@@ -1,6 +1,6 @@
-package net.scottpullen.common.bindings;
+package net.scottpullen.common.jooq.bindings;
 
-import net.scottpullen.common.converters.LocalDateTimeConverter;
+import net.scottpullen.common.jooq.converters.LocalDateTimeConverter;
 import org.jooq.Binding;
 import org.jooq.BindingGetResultSetContext;
 import org.jooq.BindingGetSQLInputContext;

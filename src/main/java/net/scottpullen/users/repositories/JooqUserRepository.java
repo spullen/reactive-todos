@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 import java.sql.BatchUpdateException;
 import java.util.Optional;
 
-import static net.scottpullen.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
+import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
 
 public class JooqUserRepository implements UserRepository {
 

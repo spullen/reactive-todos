@@ -1,4 +1,10 @@
 package net.scottpullen.security;
 
-public class SecurityModule {
+import com.google.inject.AbstractModule;
+
+public class SecurityModule extends AbstractModule {
+    @Override
+    public void configure() {
+
+    }
 }

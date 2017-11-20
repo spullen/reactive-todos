@@ -1,6 +1,6 @@
 package net.scottpullen.tasks.tables;
 
-import net.scottpullen.common.CustomDataTypes;
+import net.scottpullen.common.jooq.CustomDataTypes;
 import org.jooq.Field;
 import org.jooq.Table;
 import org.jooq.util.postgres.PostgresDataType;

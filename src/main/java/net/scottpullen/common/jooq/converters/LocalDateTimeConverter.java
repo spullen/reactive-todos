@@ -1,4 +1,4 @@
-package net.scottpullen.common.converters;
+package net.scottpullen.common.jooq.converters;
 
 import org.jooq.Converter;
 

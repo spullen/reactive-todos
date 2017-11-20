@@ -9,7 +9,7 @@ import static net.scottpullen.Configuration.DB_CONNECTION_TIMEOUT;
 import static net.scottpullen.Configuration.MAX_DB_CONNECTIONS;
 import static net.scottpullen.Configuration.MIN_DB_CONNECTIONS;
 
-public class DatabaseModule {
+public class OriginalDatabaseModule {
     private final HikariDataSource dataSource;
 
     private HikariDataSource createDataSource(final Configuration configuration) {
@@ -25,7 +25,7 @@ public class DatabaseModule {
         return new HikariDataSource(dataSourceConfig);
     }
 
-    public DatabaseModule(final Configuration configuration) {
+    public OriginalDatabaseModule(final Configuration configuration) {
         dataSource = createDataSource(configuration);
     }
 

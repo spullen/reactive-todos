@@ -1,7 +1,7 @@
-package net.scottpullen.common.bindings;
+package net.scottpullen.users.jooq.bindings;
 
 import net.scottpullen.users.entities.UserId;
-import net.scottpullen.common.converters.UserIdConverter;
+import net.scottpullen.users.jooq.converters.UserIdConverter;
 import org.jooq.Binding;
 import org.jooq.BindingGetResultSetContext;
 import org.jooq.BindingGetSQLInputContext;

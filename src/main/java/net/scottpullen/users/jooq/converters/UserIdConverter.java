@@ -1,4 +1,4 @@
-package net.scottpullen.common.converters;
+package net.scottpullen.users.jooq.converters;
 
 import net.scottpullen.users.entities.UserId;
 import org.jooq.Converter;
