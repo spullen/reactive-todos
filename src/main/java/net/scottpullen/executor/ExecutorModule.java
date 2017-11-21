@@ -18,6 +18,8 @@ public class ExecutorModule extends AbstractModule {
     @Override
     public void configure() { }
 
+    // TODO add shutdown hook for executors
+
     @Provides
     @Singleton
     public ExecutorService getExecutorService() {

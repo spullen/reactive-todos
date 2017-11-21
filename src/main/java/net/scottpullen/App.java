@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import net.scottpullen.common.constants.DateTimeConstants;
 import net.scottpullen.common.deserializers.TaskIdDeserializer;
 import net.scottpullen.common.deserializers.UserIdDeserializer;
 import net.scottpullen.common.entities.EntityId;
@@ -42,7 +43,7 @@ public class App {
     }
 
     public static void main(String[] args) throws Exception {
-        TimeZone.setDefault(TimeZone.getTimeZone(Configuration.TIME_ZONE_ID));
+        TimeZone.setDefault(TimeZone.getTimeZone(DateTimeConstants.TIME_ZONE_ID));
 
         RxRatpack.initialize();
 
