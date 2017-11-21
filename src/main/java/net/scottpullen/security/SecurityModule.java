@@ -4,7 +4,6 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
-import net.scottpullen.security.chains.SessionChain;
 import net.scottpullen.security.handlers.AuthorizationHandler;
 import net.scottpullen.security.services.AuthorizationService;
 import net.scottpullen.security.services.SessionService;

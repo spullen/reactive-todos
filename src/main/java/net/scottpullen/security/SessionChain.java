@@ -1,4 +1,4 @@
-package net.scottpullen.security.chains;
+package net.scottpullen.security;
 
 import ratpack.func.Action;
 import ratpack.handling.Chain;

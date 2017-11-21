@@ -1,4 +1,4 @@
-package net.scottpullen.users.chains;
+package net.scottpullen.users;
 
 import net.scottpullen.users.handlers.RegistrationHandler;
 import ratpack.func.Action;
