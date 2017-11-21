@@ -1,6 +1,7 @@
 package net.scottpullen.security.handlers;
 
 import com.google.common.net.HttpHeaders;
+import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.security.SecurityConstants;
@@ -20,6 +21,7 @@ public class AuthorizationHandler implements Handler {
     private final Scheduler scheduler;
     private final AuthorizationService authorizationService;
 
+    @Inject
     public AuthorizationHandler(final Scheduler scheduler, final AuthorizationService authorizationService) {
         this.scheduler = scheduler;
         this.authorizationService = authorizationService;

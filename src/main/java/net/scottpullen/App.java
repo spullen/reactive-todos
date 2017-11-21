@@ -11,6 +11,7 @@ import net.scottpullen.common.entities.EntityId;
 import net.scottpullen.common.serializers.EntityIdSerializer;
 import net.scottpullen.database.DatabaseConfig;
 import net.scottpullen.database.DatabaseModule;
+import net.scottpullen.executor.ExecutorModule;
 import net.scottpullen.tasks.TasksModule;
 import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.users.UsersModule;
@@ -18,16 +19,9 @@ import net.scottpullen.users.entities.User;
 import net.scottpullen.security.handlers.AuthorizationHandler;
 import net.scottpullen.users.chains.RegistrationChain;
 import net.scottpullen.users.entities.UserId;
-import net.scottpullen.users.handlers.RegistrationHandler;
 import net.scottpullen.security.chains.SessionChain;
-import net.scottpullen.users.repositories.JooqUserRepository;
-import net.scottpullen.users.repositories.UserRepository;
 import net.scottpullen.security.JwtConfig;
 import net.scottpullen.security.SecurityModule;
-import net.scottpullen.security.services.AuthorizationService;
-import net.scottpullen.users.services.RegistrationService;
-import net.scottpullen.security.services.SessionService;
-import net.scottpullen.security.services.TokenGeneratorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ratpack.guice.Guice;
@@ -50,26 +44,6 @@ public class App {
     public static void main(String[] args) throws Exception {
         TimeZone.setDefault(TimeZone.getTimeZone(Configuration.TIME_ZONE_ID));
 
-        /*
-        TokenGeneratorService tokenGeneratorService = new TokenGeneratorService(
-            Configuration.JWT_USER_OBJECT_ID_CLAIM,
-            configuration.getJwtSigningKey(),
-            Configuration.JWT_TTL
-        );
-
-        UserRepository userRepository = new JooqUserRepository(databaseModule.getDataSource());
-
-        RegistrationService registrationService = new RegistrationService(tokenGeneratorService, userRepository);
-        RegistrationHandler registrationHandler = new RegistrationHandler(executorModule, registrationService);
-        RegistrationChain registrationChain = new RegistrationChain();
-
-        SessionService sessionService = new SessionService(tokenGeneratorService, userRepository);
-        SessionChain sessionChain = new SessionChain();
-
-        AuthorizationService authorizationService = new AuthorizationService(configuration, userRepository);
-        AuthorizationHandler authenticationHandler = new AuthorizationHandler(executorModule, authorizationService);
-        */
-
         RxRatpack.initialize();
 
         RatpackServer.start(spec -> {
@@ -84,6 +58,7 @@ public class App {
             });
 
             spec.registry(Guice.registry(bindings -> bindings
+                .module(ExecutorModule.class)
                 .module(DatabaseModule.class)
                 .module(SecurityModule.class)
                 .module(UsersModule.class)

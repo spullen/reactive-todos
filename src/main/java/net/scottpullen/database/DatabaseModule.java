@@ -6,13 +6,15 @@ import com.google.inject.Singleton;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+import javax.sql.DataSource;
+
 public class DatabaseModule extends AbstractModule {
     @Override
     public void configure() { }
 
     @Provides
     @Singleton
-    public HikariDataSource getDataSource(DatabaseConfig config) {
+    public DataSource getDataSource(DatabaseConfig config) {
         HikariConfig dataSourceConfig = new HikariConfig();
         dataSourceConfig.setJdbcUrl(config.getUrl());
         dataSourceConfig.setUsername(config.getUsername());
