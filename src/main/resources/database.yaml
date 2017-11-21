@@ -1,0 +1,4 @@
+db:
+  url: jdbc:postgresql:reactive_todos
+  username: spullen
+  password: ''

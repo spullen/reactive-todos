@@ -2,7 +2,7 @@ package net.scottpullen.security.services;
 
 import io.jsonwebtoken.Jwts;
 import io.reactivex.Single;
-import net.scottpullen.Configuration;
+import net.scottpullen.security.JwtConfig;
 import net.scottpullen.users.entities.User;
 import net.scottpullen.users.entities.UserId;
 import net.scottpullen.users.repositories.UserRepository;
@@ -12,11 +12,11 @@ import java.util.Optional;
 
 public class AuthorizationService {
 
-    private final Configuration configuration;
+    private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
 
-    public AuthorizationService(final Configuration configuration, final UserRepository userRepository) {
-        this.configuration = configuration;
+    public AuthorizationService(final JwtConfig jwtConfig, final UserRepository userRepository) {
+        this.jwtConfig = jwtConfig;
         this.userRepository = userRepository;
     }
 
@@ -24,7 +24,7 @@ public class AuthorizationService {
         return Single.create(subscriber -> {
             try {
                 String userIdFromToken = (String) Jwts.parser()
-                    .setSigningKey(configuration.getJwtSigningKey())
+                    .setSigningKey(jwtConfig.getSigningKey())
                     .parseClaimsJws(token)
                     .getBody()
                     .get(SecurityConstants.JWT_USER_OBJECT_ID_CLAIM);

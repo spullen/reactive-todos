@@ -11,7 +11,6 @@ import net.scottpullen.common.entities.EntityId;
 import net.scottpullen.common.serializers.EntityIdSerializer;
 import net.scottpullen.database.DatabaseConfig;
 import net.scottpullen.database.DatabaseModule;
-import net.scottpullen.modules.OriginalDatabaseModule;
 import net.scottpullen.tasks.TasksModule;
 import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.users.UsersModule;
@@ -21,8 +20,6 @@ import net.scottpullen.users.chains.RegistrationChain;
 import net.scottpullen.users.entities.UserId;
 import net.scottpullen.users.handlers.RegistrationHandler;
 import net.scottpullen.security.chains.SessionChain;
-import net.scottpullen.modules.ExecutorModule;
-import net.scottpullen.modules.ObjectMapperModule;
 import net.scottpullen.users.repositories.JooqUserRepository;
 import net.scottpullen.users.repositories.UserRepository;
 import net.scottpullen.security.JwtConfig;
@@ -53,12 +50,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         TimeZone.setDefault(TimeZone.getTimeZone(Configuration.TIME_ZONE_ID));
 
-        Configuration configuration = Configuration.fromEnvironment();
-
-        ExecutorModule executorModule = new ExecutorModule();
-        ObjectMapperModule objectMapperModule = new ObjectMapperModule();
-        OriginalDatabaseModule databaseModule = new OriginalDatabaseModule(configuration);
-
+        /*
         TokenGeneratorService tokenGeneratorService = new TokenGeneratorService(
             Configuration.JWT_USER_OBJECT_ID_CLAIM,
             configuration.getJwtSigningKey(),
@@ -76,6 +68,7 @@ public class App {
 
         AuthorizationService authorizationService = new AuthorizationService(configuration, userRepository);
         AuthorizationHandler authenticationHandler = new AuthorizationHandler(executorModule, authorizationService);
+        */
 
         RxRatpack.initialize();
 
@@ -105,19 +98,6 @@ public class App {
                         .addDeserializer(TaskId.class, TaskIdDeserializer.INSTANCE)
                     ))
             ));
-
-            /*
-            spec.registryOf(registry -> registry
-                .add(ExecutorModule.class, executorModule)
-                .add(OriginalDatabaseModule.class, databaseModule)
-                .add(ObjectMapperModule.class, objectMapperModule)
-                .add(ObjectMapper.class, objectMapperModule.getObjectMapper())
-                .add(RegistrationHandler.class, registrationHandler)
-                .add(RegistrationChain.class, registrationChain)
-                .add(SessionChain.class, sessionChain)
-                .add(AuthorizationHandler.class, authenticationHandler)
-            );
-            */
 
             spec.handlers(chain -> chain
                 .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))

@@ -3,8 +3,7 @@ package net.scottpullen.security.handlers;
 import com.google.common.net.HttpHeaders;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
-import net.scottpullen.Configuration;
-import net.scottpullen.modules.ExecutorModule;
+import net.scottpullen.security.SecurityConstants;
 import net.scottpullen.security.services.AuthorizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +20,8 @@ public class AuthorizationHandler implements Handler {
     private final Scheduler scheduler;
     private final AuthorizationService authorizationService;
 
-    public AuthorizationHandler(final ExecutorModule executorModule, final AuthorizationService authorizationService) {
-        this.scheduler = executorModule.getDataAndMessagingScheduler();
+    public AuthorizationHandler(final Scheduler scheduler, final AuthorizationService authorizationService) {
+        this.scheduler = scheduler;
         this.authorizationService = authorizationService;
     }
 
@@ -35,12 +34,12 @@ public class AuthorizationHandler implements Handler {
         } else {
             String rawToken = headers.get(HttpHeaders.AUTHORIZATION);
 
-            if(rawToken == null || rawToken.equals("") || !rawToken.startsWith(Configuration.BEARER_AUTHORIZATION_SCHEMA_KEY)) {
+            if(rawToken == null || rawToken.equals("") || !rawToken.startsWith(SecurityConstants.BEARER_AUTHORIZATION_SCHEMA_KEY)) {
                 ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
                 return;
             }
 
-            final String token = rawToken.replace(Configuration.BEARER_AUTHORIZATION_PREFIX, "");
+            final String token = rawToken.replace(SecurityConstants.BEARER_AUTHORIZATION_PREFIX, "");
 
             authorizationService.perform(token)
                 .observeOn(scheduler)

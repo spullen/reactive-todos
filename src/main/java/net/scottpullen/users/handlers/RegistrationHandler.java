@@ -1,9 +1,9 @@
 package net.scottpullen.users.handlers;
 
+import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.users.commands.RegistrationCommand;
-import net.scottpullen.modules.ExecutorModule;
 import net.scottpullen.users.services.RegistrationService;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
@@ -16,8 +16,9 @@ public class RegistrationHandler implements Handler {
     private final Scheduler scheduler;
     private final RegistrationService registrationService;
 
-    public RegistrationHandler(ExecutorModule executorModule, RegistrationService registrationService) {
-        this.scheduler = executorModule.getDataAndMessagingScheduler();
+    @Inject
+    public RegistrationHandler(Scheduler scheduler, RegistrationService registrationService) {
+        this.scheduler = scheduler;
         this.registrationService = registrationService;
     }
 
