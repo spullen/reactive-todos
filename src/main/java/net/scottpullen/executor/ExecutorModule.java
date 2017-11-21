@@ -5,6 +5,8 @@ import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import io.reactivex.Scheduler;
 import io.reactivex.schedulers.Schedulers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -15,15 +17,24 @@ import static net.scottpullen.executor.ExecutorConstants.MAX_RABBIT_CONSUMER_THR
 import static net.scottpullen.executor.ExecutorConstants.SCHEDULED_THREAD_POOL_SIZE;
 
 public class ExecutorModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(ExecutorModule.class);
+
     @Override
     public void configure() { }
-
-    // TODO add shutdown hook for executors
 
     @Provides
     @Singleton
     public ExecutorService getExecutorService() {
-        return Executors.newFixedThreadPool(MAX_DB_CONNECTIONS + MAX_RABBIT_CONSUMER_THREADS);
+        ExecutorService executorService =  Executors.newFixedThreadPool(MAX_DB_CONNECTIONS + MAX_RABBIT_CONSUMER_THREADS);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            try {
+                executorService.shutdown();
+            }
+            catch (SecurityException e) {
+                log.error("Could not shut down", e);
+            }
+        }));
+        return executorService;
     }
 
     @Provides

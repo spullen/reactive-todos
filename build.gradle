@@ -54,7 +54,7 @@ dependencies {
     testCompile ratpack.dependency('test')
 }
 
-mainClassName = 'net.scottpullen.App'
+mainClassName = 'net.scottpullen.Application'
 
 flyway {
     url = System.getenv('TODOS_DATABASE_URL')
