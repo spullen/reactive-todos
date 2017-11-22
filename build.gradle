@@ -57,9 +57,9 @@ dependencies {
 mainClassName = 'net.scottpullen.Application'
 
 flyway {
-    url = System.getenv('TODOS_DATABASE_URL')
-    user = System.getenv('TODOS_DATABASE_USERNAME')
-    password = System.getenv('TODOS_DATABASE_USERNAME')
+    url = System.getenv('RT_DATABASE_URL')
+    user = System.getenv('RT_DATABASE_USERNAME')
+    password = System.getenv('RT_DATABASE_USERNAME')
 }
 
 test {

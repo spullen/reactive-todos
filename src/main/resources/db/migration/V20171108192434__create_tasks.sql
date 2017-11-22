@@ -3,6 +3,7 @@ CREATE TABLE tasks (
   user_id UUID REFERENCES users(id) NOT NULL,
   content TEXT,
   status TEXT NOT NULL,
+  priority INT NOT NULL DEFAULT 0,
   due_date timestamp without time zone,
   completed_at timestamp without time zone,
   created_at timestamp without time zone,

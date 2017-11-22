@@ -1,4 +1,4 @@
 db:
-  url: jdbc:postgresql:reactive_todos
+  url: 'jdbc:postgresql:reactive-tasks'
   username: spullen
   password: ''
