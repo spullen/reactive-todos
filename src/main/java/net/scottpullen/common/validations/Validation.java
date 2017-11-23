@@ -1,13 +1,16 @@
 package net.scottpullen.common.validations;
 
 import io.reactivex.Completable;
-import net.scottpullen.users.entities.User;
-import net.scottpullen.users.entities.UserId;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
 import java.util.function.Consumer;
 
+/**
+ * Scratch work (see evernote for notes on thoughts)
+ *
+ * General idea is to provide something like FluentValidator, but slightly more flexible using functional programming
+ *
+ * @param <T>
+ */
 public class Validation<T> {
     private final T target;
 
@@ -24,23 +27,6 @@ public class Validation<T> {
             } catch (Exception e) {
                 subscriber.onError(e);
             }
-        });
-    }
-
-    public static void test() {
-        User u = new User(
-            new UserId(UUID.randomUUID()),
-            "s.pullen05@gmail.com",
-            "Scott Pullen",
-            "password",
-            LocalDateTime.now(),
-            LocalDateTime.now()
-        );
-
-        (new Validation<User>(u)).validate(validationContext -> {
-            /*
-                validationContext.presence("email", validationContext.getTarget().getEmail());
-            */
         });
     }
 }

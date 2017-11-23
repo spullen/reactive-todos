@@ -45,6 +45,19 @@ public class RegistrationService {
         log.warn("USER: {}", user);
 
         // validate command
+        // - email
+        //  - presence
+        //  - format
+        //  - uniqueness
+        // - full name
+        //  - presence
+        // - password
+        //  - presence
+        //  - length > 8
+        //  - TODO: custom validator number, special character
+        // - passwordConfirmation
+        //  - presence
+        //  - confirmation with password
         // create user
 
         return userRepository.create(user)
