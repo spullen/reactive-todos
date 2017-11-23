@@ -29,8 +29,7 @@ public class ExecutorModule extends AbstractModule {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             try {
                 executorService.shutdown();
-            }
-            catch (SecurityException e) {
+            } catch (SecurityException e) {
                 log.error("Could not shut down", e);
             }
         }));

@@ -8,7 +8,8 @@ import net.scottpullen.users.entities.UserId;
 import java.util.Optional;
 
 public interface UserRepository {
-    Completable create(final User user);
+    Single<UserId> nextId();
+    Single<UserId> create(final User user);
     Completable update(final User user);
     Single<Optional<User>> findById(final UserId id);
     Single<Optional<User>> findByEmail(final String email);

@@ -14,6 +14,7 @@ import org.jooq.impl.DSL;
 import javax.sql.DataSource;
 import java.sql.BatchUpdateException;
 import java.util.Optional;
+import java.util.UUID;
 
 import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
 
@@ -26,8 +27,15 @@ public class JooqUserRepository implements UserRepository {
     }
 
     @Override
-    public Completable create(User user) {
-        return Completable.create(subscriber -> {
+    public Single<UserId> nextId() {
+        return Single.create(subscriber -> {
+            subscriber.onSuccess(new UserId(UUID.randomUUID()));
+        });
+    }
+
+    @Override
+    public Single<UserId> create(User user) {
+        return Single.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
                     DSLContext transaction = DSL.using(configuration);
@@ -41,7 +49,7 @@ public class JooqUserRepository implements UserRepository {
                         .set(Users.UPDATED_AT, user.getUpdatedAt())
                         .execute();
 
-                    subscriber.onComplete();
+                    subscriber.onSuccess(user.getId());
                 });
             } catch(org.jooq.exception.DataAccessException e) {
                 subscriber.onError(translateException(e));

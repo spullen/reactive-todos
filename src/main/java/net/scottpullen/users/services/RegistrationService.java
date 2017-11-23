@@ -1,19 +1,23 @@
 package net.scottpullen.users.services;
 
+import com.baidu.unbiz.fluentvalidator.ComplexResult;
+import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import io.reactivex.Single;
+import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.users.commands.RegistrationCommand;
 import net.scottpullen.security.entities.AuthenticationToken;
 import net.scottpullen.users.entities.User;
-import net.scottpullen.users.entities.UserId;
 import net.scottpullen.users.repositories.UserRepository;
 import net.scottpullen.security.services.PasswordHashingService;
 import net.scottpullen.security.services.TokenGeneratorService;
+import net.scottpullen.users.validators.RegistrationCommandValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.UUID;
+
+import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
 
 public class RegistrationService {
 
@@ -28,41 +32,45 @@ public class RegistrationService {
     }
 
     public Single<Optional<AuthenticationToken>> perform(RegistrationCommand command) {
-        UserId id = new UserId(UUID.randomUUID());
-        LocalDateTime createdAt = LocalDateTime.now();
+        return Single.just(command)
+            .flatMap(this::validateCommand)
+            .flatMap(this::buildUser)
+            .flatMap(userRepository::create)
+            .map(tokenGeneratorService::perform);
+    }
 
-        log.warn("ID: {}, {}", id, createdAt);
+    private Single<RegistrationCommand> validateCommand(RegistrationCommand command) {
+        return Single.create(subscriber -> {
+            try {
+                ComplexResult validationResult = FluentValidator.checkAll()
+                    .on(command, new RegistrationCommandValidator())
+                    .doValidate()
+                    .result(toComplex());
 
-        User user = new User(
-            id,
-            command.getEmail(),
-            command.getFullName(),
-            PasswordHashingService.perform(command.getPassword()),
-            createdAt,
-            createdAt
-        );
+                if(validationResult.isSuccess()) {
+                    subscriber.onSuccess(command);
+                } else {
+                    subscriber.onError(new ValidationException(validationResult));
+                }
+            } catch (Exception e) {
+                subscriber.onError(e);
+            }
+        });
+    }
 
-        log.warn("USER: {}", user);
+    private Single<User> buildUser(RegistrationCommand command) {
+        return userRepository.nextId()
+            .map(userId -> {
+                LocalDateTime createdAt = LocalDateTime.now();
 
-        // validate command
-        // - email
-        //  - presence
-        //  - format
-        //  - uniqueness
-        // - full name
-        //  - presence
-        // - password
-        //  - presence
-        //  - length > 8
-        //  - TODO: custom validator number, special character
-        // - passwordConfirmation
-        //  - presence
-        //  - confirmation with password
-        // create user
-
-
-
-        return userRepository.create(user)
-            .toSingle(() -> tokenGeneratorService.perform(id));
+                return new User(
+                    userId,
+                    command.getEmail(),
+                    command.getFullName(),
+                    PasswordHashingService.perform(command.getPassword()),
+                    createdAt,
+                    createdAt
+                );
+            });
     }
 }
