@@ -20,7 +20,7 @@ import net.scottpullen.users.entities.User;
 import net.scottpullen.security.handlers.AuthorizationHandler;
 import net.scottpullen.users.RegistrationApiChain;
 import net.scottpullen.users.entities.UserId;
-import net.scottpullen.security.SessionChain;
+import net.scottpullen.security.SessionApiChain;
 import net.scottpullen.security.JwtConfig;
 import net.scottpullen.security.SecurityModule;
 import org.slf4j.Logger;
@@ -78,7 +78,7 @@ public class Application {
             spec.handlers(chain -> chain
                 .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
                 .prefix("api/registration", RegistrationApiChain.class)
-                .prefix("api/session", SessionChain.class)
+                .prefix("api/session", SessionApiChain.class)
                 .prefix("api", api -> api
                     .all(AuthorizationHandler.class)
                     .get("test", ctx -> {

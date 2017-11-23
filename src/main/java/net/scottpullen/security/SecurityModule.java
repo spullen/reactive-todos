@@ -13,7 +13,7 @@ import net.scottpullen.users.repositories.UserRepository;
 public class SecurityModule extends AbstractModule {
     @Override
     public void configure() {
-        bind(SessionChain.class).in(Scopes.SINGLETON);
+        bind(SessionApiChain.class).in(Scopes.SINGLETON);
         bind(AuthorizationHandler.class).in(Scopes.SINGLETON);
     }
 
