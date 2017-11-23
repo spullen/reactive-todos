@@ -1,4 +1,4 @@
-package net.scottpullen.common.validations;
+package net.scottpullen.common.scratchvalidations;
 
 abstract class Validator {
     abstract void validate();

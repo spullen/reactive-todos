@@ -1,4 +1,4 @@
-package net.scottpullen.common.validations;
+package net.scottpullen.common.scratchvalidations;
 
 /**
  * Validates the values numericality characteristics

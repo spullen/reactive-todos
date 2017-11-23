@@ -1,4 +1,4 @@
-package net.scottpullen.common.validations;
+package net.scottpullen.common.scratchvalidations;
 
 /**
  * Validates that the value is included in a given list

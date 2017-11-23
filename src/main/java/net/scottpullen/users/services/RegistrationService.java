@@ -60,6 +60,8 @@ public class RegistrationService {
         //  - confirmation with password
         // create user
 
+
+
         return userRepository.create(user)
             .toSingle(() -> tokenGeneratorService.perform(id));
     }
