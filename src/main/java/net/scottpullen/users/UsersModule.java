@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 public class UsersModule extends AbstractModule {
     @Override
     public void configure() {
-        bind(RegistrationChain.class).in(Scopes.SINGLETON);
+        bind(RegistrationApiChain.class).in(Scopes.SINGLETON);
         bind(RegistrationHandler.class).in(Scopes.SINGLETON);
         bind(UsersApiChain.class).in(Scopes.SINGLETON);
     }

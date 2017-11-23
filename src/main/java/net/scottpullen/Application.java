@@ -18,7 +18,7 @@ import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.users.UsersModule;
 import net.scottpullen.users.entities.User;
 import net.scottpullen.security.handlers.AuthorizationHandler;
-import net.scottpullen.users.RegistrationChain;
+import net.scottpullen.users.RegistrationApiChain;
 import net.scottpullen.users.entities.UserId;
 import net.scottpullen.security.SessionChain;
 import net.scottpullen.security.JwtConfig;
@@ -77,7 +77,7 @@ public class Application {
 
             spec.handlers(chain -> chain
                 .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
-                .prefix("api/registration", RegistrationChain.class)
+                .prefix("api/registration", RegistrationApiChain.class)
                 .prefix("api/session", SessionChain.class)
                 .prefix("api", api -> api
                     .all(AuthorizationHandler.class)
