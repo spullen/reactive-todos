@@ -1,7 +1,11 @@
 package net.scottpullen.security.services;
 
+import io.reactivex.Single;
 import net.scottpullen.security.commands.SessionCommand;
+import net.scottpullen.security.entities.AuthenticationToken;
 import net.scottpullen.users.repositories.UserRepository;
+
+import java.util.Optional;
 
 public class SessionService {
 
@@ -13,9 +17,10 @@ public class SessionService {
         this.userRepository = userRepository;
     }
 
-    public void perform(SessionCommand command) {
-        // find user by email
+    public Single<Optional<AuthenticationToken>> perform(SessionCommand command) {
+        return Single.create(subscriber -> {
 
+        });
     }
 
 }

@@ -5,6 +5,7 @@ import com.google.inject.Provides;
 import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import net.scottpullen.security.handlers.AuthorizationHandler;
+import net.scottpullen.security.handlers.SessionHandler;
 import net.scottpullen.security.services.AuthorizationService;
 import net.scottpullen.security.services.SessionService;
 import net.scottpullen.security.services.TokenGeneratorService;
@@ -14,6 +15,7 @@ public class SecurityModule extends AbstractModule {
     @Override
     public void configure() {
         bind(SessionApiChain.class).in(Scopes.SINGLETON);
+        bind(SessionHandler.class).in(Scopes.SINGLETON);
         bind(AuthorizationHandler.class).in(Scopes.SINGLETON);
     }
 

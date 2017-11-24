@@ -1,11 +1,11 @@
-package net.scottpullen.users.handlers;
+package net.scottpullen.security.handlers;
 
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
-import net.scottpullen.users.commands.RegistrationCommand;
-import net.scottpullen.users.services.RegistrationService;
+import net.scottpullen.security.commands.SessionCommand;
+import net.scottpullen.security.services.SessionService;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
@@ -13,24 +13,24 @@ import ratpack.rx2.RxRatpack;
 import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
-public class RegistrationHandler implements Handler {
+public class SessionHandler implements Handler {
 
     private final Scheduler scheduler;
-    private final RegistrationService registrationService;
+    private final SessionService sessionService;
 
     @Inject
-    public RegistrationHandler(Scheduler scheduler, RegistrationService registrationService) {
+    public SessionHandler(Scheduler scheduler, SessionService sessionService) {
         this.scheduler = scheduler;
-        this.registrationService = registrationService;
+        this.sessionService = sessionService;
     }
 
     @Override
     public void handle(Context ctx) throws Exception {
-        ctx.parse(fromJson(RegistrationCommand.class))
+        ctx.parse(fromJson(SessionCommand.class))
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
-            .flatMap(registrationService::perform)
+            .flatMap(sessionService::perform)
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
@@ -40,7 +40,7 @@ public class RegistrationHandler implements Handler {
                     } else {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                         // Render something useful
-                        ctx.render("Failed to register user");
+                        ctx.render("Failed to start session");
                     }
                 },
                 error -> {
