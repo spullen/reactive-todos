@@ -4,6 +4,7 @@ import com.baidu.unbiz.fluentvalidator.ComplexResult;
 import com.baidu.unbiz.fluentvalidator.FluentValidator;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.ValidationException;
+import net.scottpullen.common.validators.UniquenessValidator;
 import net.scottpullen.users.commands.RegistrationCommand;
 import net.scottpullen.security.entities.AuthenticationToken;
 import net.scottpullen.users.entities.User;
@@ -11,6 +12,7 @@ import net.scottpullen.users.repositories.UserRepository;
 import net.scottpullen.security.services.PasswordHashingService;
 import net.scottpullen.security.services.TokenGeneratorService;
 import net.scottpullen.users.validators.RegistrationCommandValidator;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,6 +46,8 @@ public class RegistrationService {
             try {
                 ComplexResult validationResult = FluentValidator.checkAll()
                     .on(command, new RegistrationCommandValidator())
+                    .on(userRepository.existsByEmail(command.getEmail()), new UniquenessValidator(command.getEmail(), "email", "registration.email.uniqueness"))
+                        .when(StringUtils.isNotBlank(command.getEmail()))
                     .doValidate()
                     .result(toComplex());
 
@@ -65,9 +69,9 @@ public class RegistrationService {
 
                 return new User(
                     userId,
-                    command.getEmail(),
-                    command.getFullName(),
-                    PasswordHashingService.perform(command.getPassword()),
+                    command.getEmail().trim(),
+                    command.getFullName().trim(),
+                    PasswordHashingService.perform(command.getPassword().trim()),
                     createdAt,
                     createdAt
                 );

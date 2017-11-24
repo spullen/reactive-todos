@@ -3,6 +3,7 @@ package net.scottpullen.users.handlers;
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
+import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.users.commands.RegistrationCommand;
 import net.scottpullen.users.services.RegistrationService;
 import ratpack.handling.Context;
@@ -13,6 +14,7 @@ import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
 public class RegistrationHandler implements Handler {
+
     private final Scheduler scheduler;
     private final RegistrationService registrationService;
 
@@ -44,7 +46,12 @@ public class RegistrationHandler implements Handler {
                     }
                 },
                 error -> {
-                    ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                    if(error instanceof ValidationException) {
+                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                        ctx.render(json(((ValidationException) error).getValidationResult()));
+                    } else {
+                        ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                    }
                 }
             );
     }
