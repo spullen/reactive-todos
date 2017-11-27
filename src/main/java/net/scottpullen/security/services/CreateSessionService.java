@@ -10,12 +10,12 @@ import net.scottpullen.users.repositories.UserRepository;
 
 import java.util.Optional;
 
-public class SessionService {
+public class CreateSessionService {
 
     private final TokenGeneratorService tokenGeneratorService;
     private final UserRepository userRepository;
 
-    public SessionService(final TokenGeneratorService tokenGeneratorService, final UserRepository userRepository) {
+    public CreateSessionService(final TokenGeneratorService tokenGeneratorService, final UserRepository userRepository) {
         this.tokenGeneratorService = tokenGeneratorService;
         this.userRepository = userRepository;
     }

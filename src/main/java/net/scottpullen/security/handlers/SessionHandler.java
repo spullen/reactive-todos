@@ -5,7 +5,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.security.commands.SessionCommand;
-import net.scottpullen.security.services.SessionService;
+import net.scottpullen.security.services.CreateSessionService;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
@@ -16,10 +16,10 @@ import static ratpack.jackson.Jackson.json;
 public class SessionHandler implements Handler {
 
     private final Scheduler scheduler;
-    private final SessionService sessionService;
+    private final CreateSessionService sessionService;
 
     @Inject
-    public SessionHandler(Scheduler scheduler, SessionService sessionService) {
+    public SessionHandler(Scheduler scheduler, CreateSessionService sessionService) {
         this.scheduler = scheduler;
         this.sessionService = sessionService;
     }

@@ -7,7 +7,7 @@ import com.google.inject.Singleton;
 import net.scottpullen.security.handlers.AuthorizationHandler;
 import net.scottpullen.security.handlers.SessionHandler;
 import net.scottpullen.security.services.AuthorizationService;
-import net.scottpullen.security.services.SessionService;
+import net.scottpullen.security.services.CreateSessionService;
 import net.scottpullen.security.services.TokenGeneratorService;
 import net.scottpullen.users.repositories.UserRepository;
 
@@ -27,9 +27,9 @@ public class SecurityModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public SessionService getSessionService(final TokenGeneratorService tokenGeneratorService,
-                                            final UserRepository userRepository) {
-        return new SessionService(tokenGeneratorService, userRepository);
+    public CreateSessionService getSessionService(final TokenGeneratorService tokenGeneratorService,
+                                                  final UserRepository userRepository) {
+        return new CreateSessionService(tokenGeneratorService, userRepository);
     }
 
     @Provides
