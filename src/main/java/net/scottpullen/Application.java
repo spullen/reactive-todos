@@ -13,6 +13,7 @@ import net.scottpullen.common.serializers.EntityIdSerializer;
 import net.scottpullen.database.DatabaseConfig;
 import net.scottpullen.database.DatabaseModule;
 import net.scottpullen.executor.ExecutorModule;
+import net.scottpullen.tasks.TasksApiChain;
 import net.scottpullen.tasks.TasksModule;
 import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.users.UsersModule;
@@ -81,6 +82,7 @@ public class Application {
                 .prefix("api/session", SessionApiChain.class)
                 .prefix("api", api -> api
                     .all(AuthorizationHandler.class)
+                    .prefix("tasks", TasksApiChain.class)
                     .get("test", ctx -> {
                         User user = ctx.get(User.class);
                         ctx.render("Here in API. Hello, " + user.getFullName());
