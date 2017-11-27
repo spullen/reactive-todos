@@ -3,6 +3,7 @@ package net.scottpullen.security.handlers;
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
+import net.scottpullen.common.exceptions.NotFoundException;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.security.commands.SessionCommand;
 import net.scottpullen.security.services.CreateSessionService;
@@ -26,31 +27,36 @@ public class SessionHandler implements Handler {
 
     @Override
     public void handle(Context ctx) throws Exception {
-        ctx.parse(fromJson(SessionCommand.class))
-            .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
-            .to(RxRatpack::single)
-            .observeOn(scheduler)
-            .flatMap(sessionService::perform)
-            .toObservable()
-            .compose(RxRatpack::bindExec)
-            .subscribe(
-                maybeToken -> {
-                    if(maybeToken.isPresent()) {
-                        ctx.render(json(maybeToken.get()));
-                    } else {
-                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                        // Render something useful
-                        ctx.render("Failed to start session");
-                    }
-                },
-                error -> {
-                    if(error instanceof ValidationException) {
-                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                        ctx.render(json(((ValidationException) error).getValidationResult()));
-                    } else {
-                        ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                    }
-                }
-            );
+        ctx.byMethod(methodSpec ->
+            methodSpec.post(() -> {
+                ctx.parse(fromJson(SessionCommand.class))
+                    .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
+                    .to(RxRatpack::single)
+                    .observeOn(scheduler)
+                    .flatMap(sessionService::perform)
+                    .toObservable()
+                    .compose(RxRatpack::bindExec)
+                    .subscribe(
+                        maybeToken -> {
+                            if(maybeToken.isPresent()) {
+                                ctx.render(json(maybeToken.get()));
+                            } else {
+                                ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
+                            }
+                        },
+                        error -> {
+                            if(error instanceof ValidationException) {
+                                ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                                ctx.render(json(((ValidationException) error).getValidationResult()));
+                            } else if(error instanceof NotFoundException) {
+                                ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
+                            } else {
+                                ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                            }
+                        }
+                    );
+            })
+        );
+
     }
 }
