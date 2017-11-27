@@ -8,7 +8,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'io.ratpack:ratpack-gradle:1.5.0'
+        classpath 'io.ratpack:ratpack-gradle:1.5.1'
         classpath 'org.postgresql:postgresql:42.1.4'
         classpath 'gradle.plugin.com.boxfuse.client:flyway-release:4.2.0'
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.3"
