@@ -26,36 +26,31 @@ public class RegistrationHandler implements Handler {
 
     @Override
     public void handle(Context ctx) throws Exception {
-        ctx.byMethod(methodSpec -> methodSpec.
-            post(() -> {
-                ctx.parse(fromJson(RegistrationCommand.class))
-                    .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
-                    .to(RxRatpack::single)
-                    .observeOn(scheduler)
-                    .flatMap(registrationService::perform)
-                    .toObservable()
-                    .compose(RxRatpack::bindExec)
-                    .subscribe(
-                        maybeToken -> {
-                            if(maybeToken.isPresent()) {
-                                ctx.render(json(maybeToken.get()));
-                            } else {
-                                ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                                // Render something useful
-                                ctx.render("Failed to register user");
-                            }
-                        },
-                        error -> {
-                            if(error instanceof ValidationException) {
-                                ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                                ctx.render(json(((ValidationException) error).getValidationResult()));
-                            } else {
-                                ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                            }
-                        }
-                    );
-            })
-        );
-
+        ctx.parse(fromJson(RegistrationCommand.class))
+            .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
+            .to(RxRatpack::single)
+            .observeOn(scheduler)
+            .flatMap(registrationService::perform)
+            .toObservable()
+            .compose(RxRatpack::bindExec)
+            .subscribe(
+                maybeToken -> {
+                    if(maybeToken.isPresent()) {
+                        ctx.render(json(maybeToken.get()));
+                    } else {
+                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                        // Render something useful
+                        ctx.render("Failed to register user");
+                    }
+                },
+                error -> {
+                    if(error instanceof ValidationException) {
+                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                        ctx.render(json(((ValidationException) error).getValidationResult()));
+                    } else {
+                        ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
+                    }
+                }
+            );
     }
 }
