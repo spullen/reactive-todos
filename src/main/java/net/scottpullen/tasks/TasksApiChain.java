@@ -1,24 +1,22 @@
 package net.scottpullen.tasks;
 
-import net.scottpullen.tasks.handlers.TaskHandler;
-import net.scottpullen.tasks.handlers.TasksHandler;
+import net.scottpullen.tasks.handlers.TaskCreateHandler;
+import net.scottpullen.tasks.handlers.TaskDeleteHandler;
+import net.scottpullen.tasks.handlers.TaskIndexHandler;
+import net.scottpullen.tasks.handlers.TaskUpdateHandler;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
 
 public class TasksApiChain implements Action<Chain> {
     @Override
     public void execute(Chain chain) throws Exception {
-        /*
-        This or what I have below?
-        chain.get(ListTasksHandler.class);
-        chain.post(CreateTaskHandler.class);
-        chain.prefix(":userId", taskChain -> {
-           chain.put(UpdateTaskHandler.class);
-           chain.delete(DeleteTaskHandler.class);
-        });
-        */
-
-        chain.path(TasksHandler.class);
-        chain.path(":taskId", TaskHandler.class);
+        chain.get(TaskIndexHandler.class)
+            .post(TaskCreateHandler.class)
+            .prefix(":taskId", taskChain -> taskChain
+                // find task
+                // authorize user/task operation
+                .put(TaskUpdateHandler.class)
+                .delete(TaskDeleteHandler.class)
+            );
     }
 }
