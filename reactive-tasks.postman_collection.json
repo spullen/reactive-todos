@@ -1,0 +1,266 @@
+{
+	"info": {
+		"name": "reactive-tasks",
+		"_postman_id": "afde0760-835e-67e6-fe0d-199a9b4c0e1b",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Registration",
+			"description": "",
+			"item": [
+				{
+					"name": "New Registration",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"s.pullen05@gmail.com\",\n\t\"fullName\":\"Scott Pullen\",\n\t\"password\":\"s3cr3t!\",\n\t\"passwordConfirmation\":\"s3cr3t!\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/registration",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"registration"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "New Registration Bad Request 2",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"s.pullen05@gmail.com\",\n\t\"fullName\":\"Scott Pullen\",\n\t\"password\":\"s3cr3t!\",\n\t\"passwordConfirmations3cr3t!\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/registration",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"registration"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "New Registration Bad Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "localhost:5050/api/registration",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"registration"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Session",
+			"description": "",
+			"item": [
+				{
+					"name": "Session Verify",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTEyMjg3MTgsImV4cCI6MTU4ODk4ODcxOCwidXNlcklkIjoiN2M4ZDVmMzctNzMwMS00ZGZhLWExNDEtYzEyMWUxMjhhYTBlIn0.spFM45hbUDGqcQMbYrohwOXBwvAQwtDppagmR3pY4SFPUzetnR9S9eSrWJjN-dab5nYW8c_MyAVleVHD4kYmSw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Length",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "localhost:5050/api/test",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"test"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Session Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"test2@test.com\",\n\t\"password\":\"s3cr3t!1234\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/session",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Session Create No User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"no-test@test.com\",\n\t\"password\":\"s3cr3t!1234\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/session",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Session Create Bad Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"test2@test.com\",\n\t\"password\":\"garbage\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/session",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Session Create Bad Request",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/session",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Task Management",
+			"description": "",
+			"item": []
+		}
+	]
+}
