@@ -4,6 +4,7 @@ import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.DataAccessException;
+import net.scottpullen.common.exceptions.UniqueConstraintException;
 import net.scottpullen.tasks.entities.Task;
 import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.tasks.entities.TaskStatus;
@@ -15,6 +16,10 @@ import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import javax.sql.DataSource;
+import java.sql.BatchUpdateException;
+import java.util.UUID;
+
+import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
 
 public class JooqTaskRepository implements TaskRepository {
 
@@ -27,13 +32,28 @@ public class JooqTaskRepository implements TaskRepository {
     @Override
     public Single<TaskId> nextId() {
         return Single.create(subscriber -> {
-
+            subscriber.onSuccess(new TaskId(UUID.randomUUID()));
         });
     }
 
     @Override
     public Completable create(Task task) {
-        return null;
+        return Single.create(subscriber -> {
+            try {
+                jooq.transaction(configuration -> {
+                    DSLContext transaction = DSL.using(configuration);
+
+                    transaction.insertInto(Tasks.TABLE)
+                        .execute();
+
+                    subscriber.onSuccess(task.getId());
+                });
+            } catch(org.jooq.exception.DataAccessException e) {
+                subscriber.onError(translateException(e));
+            } catch(Exception e) {
+                subscriber.onError(new DataAccessException("Error while creating Task: " + task.toString(), e));
+            }
+        });
     }
 
     @Override
@@ -61,5 +81,21 @@ public class JooqTaskRepository implements TaskRepository {
                 subscriber.onError(new DataAccessException("Failed to check existence of task", e));
             }
         });
+    }
+
+    private Throwable translateException(final BatchUpdateException exception) {
+        if (exception.getSQLState().equals(UNIQUE_VIOLATION_CODE)) {
+            return new UniqueConstraintException("Unique constraint violated when saving task");
+        } else {
+            return new DataAccessException("Error in JooqTaskRepository", exception);
+        }
+    }
+
+    private Throwable translateException(final org.jooq.exception.DataAccessException exception) {
+        if (exception.getCause() instanceof BatchUpdateException) {
+            return translateException((BatchUpdateException) exception.getCause());
+        } else {
+            return new DataAccessException("Error in JooqTaskRepository", exception);
+        }
     }
 }
