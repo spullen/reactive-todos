@@ -2,6 +2,7 @@ package net.scottpullen.tasks.tables;
 
 import net.scottpullen.common.jooq.CustomDataTypes;
 import net.scottpullen.tasks.entities.TaskId;
+import net.scottpullen.tasks.entities.TaskPriority;
 import net.scottpullen.tasks.entities.TaskStatus;
 import net.scottpullen.tasks.jooq.TasksDataTypes;
 import net.scottpullen.users.entities.UserId;
@@ -23,7 +24,7 @@ public class Tasks {
     public static final Field<String> CONTENT = field("content", PostgresDataType.TEXT);
     public static final Field<String> NOTES = field("notes", PostgresDataType.TEXT);
     public static final Field<TaskStatus> STATUS = field("status", TasksDataTypes.TASK_STATUS);
-    public static final Field<Integer> PRIORITY = field("priority", PostgresDataType.INT);
+    public static final Field<TaskPriority> PRIORITY = field("priority", TasksDataTypes.TASK_PRIORITY);
     public static final Field<LocalDateTime> DUE_DATE = field("due_date", CustomDataTypes.LOCAL_DATE_TIME);
     public static final Field<LocalDateTime> COMPLETED_AT = field("completed_at", CustomDataTypes.LOCAL_DATE_TIME);
     public static final Field<LocalDateTime> CREATED_AT = field("created_at", CustomDataTypes.LOCAL_DATE_TIME);

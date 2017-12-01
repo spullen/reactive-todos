@@ -22,6 +22,10 @@ public enum TaskPriority {
         this.id = id;
     }
 
+    public Integer getValue() {
+        return id;
+    }
+
     public static TaskPriority forValue(Integer value) {
         return TASK_PRIORITY_BY_VALUE.get(value);
     }

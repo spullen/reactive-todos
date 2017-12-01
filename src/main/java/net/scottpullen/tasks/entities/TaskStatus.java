@@ -22,8 +22,11 @@ public enum TaskStatus {
         this.id = id;
     }
 
+    public String getValue() {
+        return id;
+    }
+
     public static TaskStatus forValue(String value) {
         return TASK_STATUS_BY_VALUE.get(value);
     }
-
 }
