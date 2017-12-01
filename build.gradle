@@ -40,7 +40,7 @@ dependencies {
     compile 'io.jsonwebtoken:jjwt:0.7.0'
     compile 'com.baidu.unbiz:fluent-validator:1.0.9'
     compile 'com.google.guava:guava:23.0'
-    compile 'io.reactivex.rxjava2:rxjava:2.1.6'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.7'
     compile 'org.apache.commons:commons-lang3:3.7'
     compile 'com.baidu.unbiz:fluent-validator:1.0.9'
 
