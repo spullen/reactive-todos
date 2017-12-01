@@ -10,7 +10,6 @@ import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.tasks.entities.TaskStatus;
 import net.scottpullen.tasks.tables.Tasks;
 import net.scottpullen.users.entities.UserId;
-import net.scottpullen.users.tables.Users;
 import org.jooq.DSLContext;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -20,6 +19,7 @@ import java.sql.BatchUpdateException;
 import java.util.UUID;
 
 import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
+import static net.scottpullen.tasks.tables.Tasks.ID;
 
 public class JooqTaskRepository implements TaskRepository {
 
@@ -44,6 +44,16 @@ public class JooqTaskRepository implements TaskRepository {
                     DSLContext transaction = DSL.using(configuration);
 
                     transaction.insertInto(Tasks.TABLE)
+                        .set(Tasks.ID, task.getId())
+                        .set(Tasks.USER_ID, task.getUserId())
+                        .set(Tasks.CONTENT, task.getContent())
+                        .set(Tasks.NOTES, task.getNotes())
+                        .set(Tasks.STATUS, task.getStatus())
+                        .set(Tasks.PRIORITY, task.getPriority())
+                        .set(Tasks.DUE_DATE, task.getDueDate())
+                        .set(Tasks.COMPLETED_AT, task.getCompletedAt())
+                        .set(Tasks.CREATED_AT, task.getCreatedAt())
+                        .set(Tasks.UPDATED_AT, task.getUpdatedAt())
                         .execute();
 
                     subscriber.onSuccess(task.getId());
@@ -71,7 +81,7 @@ public class JooqTaskRepository implements TaskRepository {
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(
-                    jooq.select().from(Tasks.TABLE).where(Tasks.ID.eq(taskId)).limit(1)
+                    jooq.select().from(Tasks.TABLE).where(ID.eq(taskId)).limit(1)
                 );
 
                 subscriber.onSuccess(exists);
