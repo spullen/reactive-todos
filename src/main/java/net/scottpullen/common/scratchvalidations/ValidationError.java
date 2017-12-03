@@ -1,13 +1,13 @@
 package net.scottpullen.common.scratchvalidations;
 
 public class ValidationError {
-    private final String messageKey;
+    private String attributeName;
+    private Object rejectedValue;
+    private String message;
 
-    public ValidationError(final String messageKey) {
-        this.messageKey = messageKey;
-    }
-
-    public String getMessageKey() {
-        return this.messageKey;
+    public ValidationError(String attributeName, Object rejectedValue, String message) {
+        this.attributeName = attributeName;
+        this.rejectedValue = rejectedValue;
+        this.message = message;
     }
 }

@@ -8,7 +8,7 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class UniquenessValidator extends Validator {
+public class UniquenessValidator extends BaseValidator {
     public void validate() {
 
     }

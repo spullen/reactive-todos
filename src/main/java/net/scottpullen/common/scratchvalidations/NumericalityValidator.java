@@ -13,7 +13,7 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class NumericalityValidator extends Validator {
+public class NumericalityValidator extends BaseValidator {
     public void validate() {
 
     }

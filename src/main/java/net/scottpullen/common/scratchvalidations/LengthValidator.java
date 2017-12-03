@@ -12,7 +12,7 @@ package net.scottpullen.common.scratchvalidations;
  * minimum and maximum can be used together to provide a range
  *
  */
-public class LengthValidator extends Validator {
+public class LengthValidator extends BaseValidator {
     public void validate() {
 
     }

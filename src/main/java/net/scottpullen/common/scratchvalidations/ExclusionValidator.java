@@ -7,8 +7,9 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class ExclusionValidator extends Validator {
-    public void validate() {
+public class ExclusionValidator extends BaseValidator {
+
+    public boolean validate() {
 
     }
 }

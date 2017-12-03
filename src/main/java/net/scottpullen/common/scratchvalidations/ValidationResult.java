@@ -1,5 +1,4 @@
 package net.scottpullen.common.scratchvalidations;
 
-public interface Validator {
-    boolean validate();
+public class ValidationResult {
 }

@@ -8,7 +8,7 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class InclusionValidator extends Validator {
+public class InclusionValidator extends BaseValidator {
     public void validate() {
 
     }
