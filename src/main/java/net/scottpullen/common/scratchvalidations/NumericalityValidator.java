@@ -1,5 +1,7 @@
 package net.scottpullen.common.scratchvalidations;
 
+import java.util.Optional;
+
 /**
  * Validates the values numericality characteristics
  *
@@ -13,8 +15,13 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class NumericalityValidator extends BaseValidator {
-    public void validate() {
+public class NumericalityValidator extends BaseValidator implements Validator {
 
+    private NumericalityValidator(String attributeName, Object attribute, Optional<String> messageKey) {
+        super(attributeName, attribute, messageKey);
+    }
+
+    public boolean validate() {
+        return false;
     }
 }

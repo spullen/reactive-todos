@@ -1,5 +1,7 @@
 package net.scottpullen.common.scratchvalidations;
 
+import java.util.Optional;
+
 /**
  * Validates the uniqueness of a value
  *
@@ -8,8 +10,13 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class UniquenessValidator extends BaseValidator {
-    public void validate() {
+public class UniquenessValidator extends BaseValidator implements Validator {
 
+    private UniquenessValidator(String attributeName, Object attribute, Optional<String> messageKey) {
+        super(attributeName, attribute, messageKey);
+    }
+
+    public boolean validate() {
+        return false;
     }
 }

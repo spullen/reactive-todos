@@ -38,7 +38,7 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Completable create(Task task) {
-        return Single.create(subscriber -> {
+        return Completable.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
                     DSLContext transaction = DSL.using(configuration);
@@ -56,7 +56,7 @@ public class JooqTaskRepository implements TaskRepository {
                         .set(Tasks.UPDATED_AT, task.getUpdatedAt())
                         .execute();
 
-                    subscriber.onSuccess(task.getId());
+                    subscriber.onComplete();
                 });
             } catch(org.jooq.exception.DataAccessException e) {
                 subscriber.onError(translateException(e));

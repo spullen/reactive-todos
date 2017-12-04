@@ -7,7 +7,7 @@ public class ValidationChain {
     private ValidationContext context;
     private String attributeName;
     private Object attribute;
-    private List<BaseValidator> validators;
+    private List<Validator> validators;
 
     public ValidationChain(ValidationContext context, String attributeName, Object attribute) {
         this.context = context;
@@ -16,11 +16,11 @@ public class ValidationChain {
         this.validators = new ArrayList<>();
     }
 
-    public void addValidator(BaseValidator validator) {
+    public void addValidator(Validator validator) {
         validators.add(validator);
     }
 
-    public List<BaseValidator> getValidators() {
+    public List<Validator> getValidators() {
         return validators;
     }
 }
