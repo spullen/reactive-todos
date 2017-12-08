@@ -50,6 +50,7 @@ public class AuthorizationHandler implements Handler {
                 .subscribe(
                     maybeUser -> {
                         if(maybeUser.isPresent()) {
+                            // TODO: provide a wrapper for AuthenticatedUser
                             ctx.next(Registry.single(maybeUser.get()));
                         } else {
                             ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
