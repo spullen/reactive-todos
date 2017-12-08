@@ -1,5 +1,7 @@
 package net.scottpullen.common.scratchvalidations;
 
+import java.util.Optional;
+
 /**
  * Validates that the value matches some format
  *
@@ -8,8 +10,13 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class FormatValidator extends BaseValidator {
-    public void validate() {
+public class FormatValidator extends BaseValidator implements Validator {
 
+    private FormatValidator(String attributeName, Object attribute, Optional<String> messageKey) {
+        super(attributeName, attribute, messageKey);
+    }
+
+    public boolean validate() {
+        return false;
     }
 }

@@ -1,5 +1,7 @@
 package net.scottpullen.common.scratchvalidations;
 
+import java.util.Optional;
+
 /**
  * Validates the length of an attribute
  *
@@ -12,8 +14,13 @@ package net.scottpullen.common.scratchvalidations;
  * minimum and maximum can be used together to provide a range
  *
  */
-public class LengthValidator extends BaseValidator {
-    public void validate() {
+public class LengthValidator extends BaseValidator implements Validator {
 
+    private LengthValidator(String attributeName, Object attribute, Optional<String> messageKey) {
+        super(attributeName, attribute, messageKey);
+    }
+
+    public boolean validate() {
+        return false;
     }
 }
