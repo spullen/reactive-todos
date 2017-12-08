@@ -2,7 +2,7 @@ package net.scottpullen.common.scratchvalidations;
 
 import java.util.Optional;
 
-abstract class BaseValidator {
+public class BaseValidator {
     protected String attributeName;
     protected Object attribute;
     protected Optional<String> messageKey;

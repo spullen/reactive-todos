@@ -8,7 +8,7 @@ package net.scottpullen.common.scratchvalidations;
  * * message: (Optional ex. message: "alternative.message.key")
  *
  */
-public class ConfirmationValidator extends BaseValidator {
+public class ConfirmationValidator extends BaseValidator implements  Validator {
     public boolean validate() {
 
     }
