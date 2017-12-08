@@ -10,8 +10,8 @@ import net.scottpullen.users.entities.UserId;
 
 public interface TaskRepository {
     Single<TaskId> nextId();
-    Completable create(final Task task);
-    Completable update(final Task task);
+    Single<Task> create(final Task task);
+    Single<Task> update(final Task task);
     Observable<Task> findAllByTaskStatusAndByUserId(final TaskStatus status, final UserId userId);
     Single<Boolean> exists(TaskId taskId);
 }

@@ -1,6 +1,5 @@
 package net.scottpullen.tasks.repositories;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.DataAccessException;
@@ -37,8 +36,8 @@ public class JooqTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Completable create(Task task) {
-        return Completable.create(subscriber -> {
+    public Single<Task> create(Task task) {
+        return Single.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
                     DSLContext transaction = DSL.using(configuration);
@@ -56,7 +55,7 @@ public class JooqTaskRepository implements TaskRepository {
                         .set(Tasks.UPDATED_AT, task.getUpdatedAt())
                         .execute();
 
-                    subscriber.onComplete();
+                    subscriber.onSuccess(task);
                 });
             } catch(org.jooq.exception.DataAccessException e) {
                 subscriber.onError(translateException(e));
@@ -67,13 +66,62 @@ public class JooqTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Completable update(Task task) {
-        return null;
+    public Single<Task> update(Task task) {
+        return Single.create(subscriber -> {
+            try {
+                jooq.transaction(configuration -> {
+                    DSLContext transaction = DSL.using(configuration);
+
+                    transaction.update(Tasks.TABLE)
+                        .set(Tasks.CONTENT, task.getContent())
+                        .set(Tasks.NOTES, task.getNotes())
+                        .set(Tasks.STATUS, task.getStatus())
+                        .set(Tasks.PRIORITY, task.getPriority())
+                        .set(Tasks.DUE_DATE, task.getDueDate())
+                        .set(Tasks.COMPLETED_AT, task.getCompletedAt())
+                        .set(Tasks.UPDATED_AT, task.getUpdatedAt())
+                        .where(Tasks.ID.eq(task.getId()))
+                        .execute();
+
+                    subscriber.onSuccess(task);
+                });
+            } catch(org.jooq.exception.DataAccessException e) {
+                subscriber.onError(translateException(e));
+            } catch(Exception e) {
+                subscriber.onError(new DataAccessException("Error while updating Task: " + task.toString(), e));
+            }
+        });
     }
 
     @Override
     public Observable<Task> findAllByTaskStatusAndByUserId(TaskStatus status, UserId userId) {
-        return null;
+        return Observable.create(subscriber -> {
+            try {
+                jooq.select(
+                        Tasks.ID,
+                        Tasks.USER_ID,
+                        Tasks.CONTENT,
+                        Tasks.NOTES,
+                        Tasks.STATUS,
+                        Tasks.PRIORITY,
+                        Tasks.DUE_DATE,
+                        Tasks.COMPLETED_AT,
+                        Tasks.CREATED_AT,
+                        Tasks.UPDATED_AT
+                    )
+                    .from(Tasks.TABLE)
+                    .where(Tasks.STATUS.eq(status).and(Tasks.USER_ID.eq(userId)))
+                    .orderBy(Tasks.DUE_DATE, Tasks.PRIORITY.desc())
+                    .fetchStreamInto(Task.class)
+                    .forEach(subscriber::onNext);
+
+                subscriber.onComplete();
+            } catch(org.jooq.exception.DataAccessException e) {
+                subscriber.onError(translateException(e));
+            } catch(Exception e) {
+                subscriber.onError(new DataAccessException("Error while fetching tasks for Status " + status + " User " + userId, e));
+            }
+        });
     }
 
     @Override
