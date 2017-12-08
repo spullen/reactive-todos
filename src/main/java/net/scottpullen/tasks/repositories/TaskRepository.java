@@ -1,6 +1,5 @@
 package net.scottpullen.tasks.repositories;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.tasks.entities.Task;

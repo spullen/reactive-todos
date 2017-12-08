@@ -129,7 +129,7 @@ public class JooqTaskRepository implements TaskRepository {
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(
-                    jooq.select().from(Tasks.TABLE).where(ID.eq(taskId)).limit(1)
+                    jooq.select(Tasks.ID).from(Tasks.TABLE).where(ID.eq(taskId)).limit(1)
                 );
 
                 subscriber.onSuccess(exists);
