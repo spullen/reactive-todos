@@ -6,11 +6,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tasks implements Serializable {
+public class TasksResponse implements Serializable {
     int count;
     List<Task> tasks;
 
-    public Tasks() {
+    public TasksResponse() {
         count = 0;
         tasks = new ArrayList<>();
     }
