@@ -10,6 +10,7 @@ import net.scottpullen.tasks.handlers.TaskIndexHandler;
 import net.scottpullen.tasks.handlers.TaskUpdateHandler;
 import net.scottpullen.tasks.repositories.JooqTaskRepository;
 import net.scottpullen.tasks.repositories.TaskRepository;
+import net.scottpullen.tasks.services.TaskService;
 
 import javax.sql.DataSource;
 
@@ -27,5 +28,11 @@ public class TasksModule extends AbstractModule {
     @Singleton
     public TaskRepository getTaskRepository(final DataSource dataSource) {
         return new JooqTaskRepository(dataSource);
+    }
+
+    @Provides
+    @Singleton
+    public TaskService getTaskService(final TaskRepository taskRepository) {
+        return new TaskService(taskRepository);
     }
 }
