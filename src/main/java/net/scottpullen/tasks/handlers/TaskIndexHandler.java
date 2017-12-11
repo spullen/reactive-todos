@@ -9,6 +9,7 @@ import net.scottpullen.tasks.responses.Tasks;
 import net.scottpullen.users.entities.User;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
+import ratpack.rx2.RxRatpack;
 
 import static ratpack.jackson.Jackson.json;
 
@@ -32,6 +33,8 @@ public class TaskIndexHandler implements Handler {
         // TODO: make status a query param
         // TODO: add start/end dates to query params to allow filtering based on those
         taskRepository.findAllByTaskStatusAndByUserId(TaskStatus.PENDING, currentUser.getId())
+            .observeOn(scheduler)
+            .compose(RxRatpack::bindExec)
             .subscribe(
                 tasksResponse::add,
                 error -> ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code()),
