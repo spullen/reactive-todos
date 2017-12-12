@@ -30,6 +30,14 @@ public class TaskService {
     }
 
     public Completable perform(UpdateTaskCommand command, User user) {
+        // validate command
+        // fetch existing task
+        // authorize user can modify task
+        // determine if anything has changed
+        // update task object (build new?), update updated at
+        // determine whether to set completed at (to time or back to null)
+        // save task
+
         return Completable.create(subscriber -> {
 
         });

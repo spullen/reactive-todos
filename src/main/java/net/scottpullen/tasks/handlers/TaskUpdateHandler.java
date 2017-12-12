@@ -5,6 +5,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.UpdateTaskCommand;
+import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.tasks.services.TaskService;
 import net.scottpullen.users.entities.User;
 import ratpack.handling.Context;
@@ -31,10 +32,16 @@ public class TaskUpdateHandler implements Handler {
     public void handle(Context ctx) throws Exception {
         User currentUser = ctx.get(User.class);
 
+        TaskId taskId = new TaskId(ctx.getPathTokens().get("taskId"));
+
         ctx.parse(fromJson(UpdateTaskCommand.class))
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
+            .map(command -> {
+                command.setId(taskId);
+                return command;
+            })
             .flatMapCompletable(command -> taskService.perform(command, currentUser))
             .toObservable()
             .compose(RxRatpack::bindExec)

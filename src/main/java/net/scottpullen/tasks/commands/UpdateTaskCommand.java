@@ -1,5 +1,6 @@
 package net.scottpullen.tasks.commands;
 
+import net.scottpullen.tasks.entities.TaskId;
 import net.scottpullen.tasks.entities.TaskPriority;
 import net.scottpullen.tasks.entities.TaskStatus;
 
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 
 public class UpdateTaskCommand implements Serializable {
 
+    private TaskId id;
     private String content;
     private String notes;
     private TaskStatus status;
@@ -26,6 +28,19 @@ public class UpdateTaskCommand implements Serializable {
         this.priority = priority;
         this.dueDate = dueDate;
     }
+
+    public UpdateTaskCommand(TaskId id, String content, String notes, TaskStatus status, TaskPriority priority,
+                             LocalDateTime dueDate) {
+        this.id = id;
+        this.content = content;
+        this.notes = notes;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+    }
+
+    public TaskId getId() { return id; }
+    public void setId(TaskId id) { this.id = id; }
 
     public String getContent() {
         return content;
