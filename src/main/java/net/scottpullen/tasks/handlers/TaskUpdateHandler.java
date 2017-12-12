@@ -4,7 +4,6 @@ import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
-import net.scottpullen.tasks.commands.CreateTaskCommand;
 import net.scottpullen.tasks.commands.UpdateTaskCommand;
 import net.scottpullen.tasks.services.TaskService;
 import net.scottpullen.users.entities.User;
@@ -36,9 +35,8 @@ public class TaskUpdateHandler implements Handler {
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
-            .flatMap(command -> taskService.perform(command, currentUser))
-            .toCompletable()
-            .compose(RxRatpack::bindExec)
+            //.compose(RxRatpack::bindExec) // a Completable version of this doesn't exist yet
+            .flatMapCompletable(command -> taskService.perform(command, currentUser))
             .subscribe(
                 () -> {
                     ctx.getResponse().status(HttpResponseStatus.NO_CONTENT.code());
