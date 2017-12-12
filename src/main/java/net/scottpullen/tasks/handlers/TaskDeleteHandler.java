@@ -46,10 +46,7 @@ public class TaskDeleteHandler implements Handler {
                         ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                     }
                 },
-                () -> {
-                    ctx.getResponse().status(HttpResponseStatus.NO_CONTENT.code());
-                    ctx.render(new HashMap<>());
-                }
+                () -> ctx.getResponse().status(HttpResponseStatus.NO_CONTENT.code()).send()
             );
     }
 }
