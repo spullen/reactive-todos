@@ -44,7 +44,7 @@ public class TaskUpdateHandler implements Handler {
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
-                (t) -> {},
+                (t) -> {}, // No-op, translating Completable -> Observable to get it to work with RxRatpack bindings
                 error -> {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());

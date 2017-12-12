@@ -6,4 +6,8 @@ import java.io.Serializable;
 
 public class TaskCreateResponse implements Serializable {
     TaskId id;
+
+    public TaskCreateResponse(TaskId id) {
+        this.id = id;
+    }
 }

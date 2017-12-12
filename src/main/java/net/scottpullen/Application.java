@@ -77,7 +77,6 @@ public class Application {
             ));
 
             spec.handlers(chain -> chain
-                .get("test/:name", ctx -> ctx.render("Hello " + ctx.getPathTokens().get("name") + "!"))
                 .prefix("api/registration", RegistrationApiChain.class)
                 .prefix("api/session", SessionApiChain.class)
                 .prefix("api", api -> api
