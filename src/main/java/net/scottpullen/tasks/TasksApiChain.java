@@ -1,9 +1,6 @@
 package net.scottpullen.tasks;
 
-import net.scottpullen.tasks.handlers.TaskCreateHandler;
-import net.scottpullen.tasks.handlers.TaskDeleteHandler;
-import net.scottpullen.tasks.handlers.TaskIndexHandler;
-import net.scottpullen.tasks.handlers.TaskUpdateHandler;
+import net.scottpullen.tasks.handlers.*;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
 
@@ -13,8 +10,7 @@ public class TasksApiChain implements Action<Chain> {
         chain.get(TaskIndexHandler.class)
             .post(TaskCreateHandler.class)
             .prefix(":taskId", taskChain -> taskChain
-                // find task
-                // authorize user/task operation
+                .all(TaskIdHandler.class)
                 .put(TaskUpdateHandler.class)
                 .delete(TaskDeleteHandler.class)
             );

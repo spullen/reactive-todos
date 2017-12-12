@@ -32,14 +32,12 @@ public class TaskUpdateHandler implements Handler {
     public void handle(Context ctx) throws Exception {
         User currentUser = ctx.get(User.class);
 
-        TaskId taskId = new TaskId(ctx.getPathTokens().get("taskId"));
-
         ctx.parse(fromJson(UpdateTaskCommand.class))
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
             .map(command -> {
-                command.setId(taskId);
+                command.setId(ctx.get(TaskId.class));
                 return command;
             })
             .flatMapCompletable(command -> taskService.perform(command, currentUser))
