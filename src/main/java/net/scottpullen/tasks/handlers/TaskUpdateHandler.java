@@ -35,13 +35,11 @@ public class TaskUpdateHandler implements Handler {
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
-            //.compose(RxRatpack::bindExec) // a Completable version of this doesn't exist yet
             .flatMapCompletable(command -> taskService.perform(command, currentUser))
+            .toObservable()
+            .compose(RxRatpack::bindExec)
             .subscribe(
-                () -> {
-                    ctx.getResponse().status(HttpResponseStatus.NO_CONTENT.code());
-                    ctx.render(new HashMap<>());
-                },
+                (t) -> {},
                 error -> {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
@@ -49,6 +47,10 @@ public class TaskUpdateHandler implements Handler {
                     } else {
                         ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                     }
+                },
+                () -> {
+                    ctx.getResponse().status(HttpResponseStatus.NO_CONTENT.code());
+                    ctx.render(new HashMap<>());
                 }
             );
     }
