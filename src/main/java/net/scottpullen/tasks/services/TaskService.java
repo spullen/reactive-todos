@@ -21,12 +21,12 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
-    public Single<Optional<TaskCreateResponse>> perform(CreateTaskCommand command, User user) {
+    public Single<TaskCreateResponse> perform(CreateTaskCommand command, User user) {
         return Single.just(command)
             .flatMap(this::validateCreateCommand)
             .flatMap((validatedCommand) -> this.buildTaskFromCreateCommand(validatedCommand, user))
             .flatMap(taskRepository::create)
-            .map(task -> Optional.of(new TaskCreateResponse(task.getId())));
+            .map(task -> new TaskCreateResponse(task.getId()));
     }
 
     private Single<CreateTaskCommand> validateCreateCommand(CreateTaskCommand command) {

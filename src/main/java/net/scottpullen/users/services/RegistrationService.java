@@ -33,7 +33,7 @@ public class RegistrationService {
         this.userRepository = userRepository;
     }
 
-    public Single<Optional<AuthenticationToken>> perform(RegistrationCommand command) {
+    public Single<AuthenticationToken> perform(RegistrationCommand command) {
         return Single.just(command)
             .flatMap(this::validateCommand)
             .flatMap(this::buildUser)

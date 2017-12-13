@@ -37,15 +37,7 @@ public class TaskCreateHandler implements Handler {
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
-                maybeTaskCreateResponse -> {
-                    if(maybeTaskCreateResponse.isPresent()) {
-                        ctx.render(json(maybeTaskCreateResponse.get()));
-                    } else {
-                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                        // Render something useful, better way of handling?
-                        ctx.render("Failed to create task");
-                    }
-                },
+                taskCreateResponse -> ctx.render(json(taskCreateResponse)),
                 error -> {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());

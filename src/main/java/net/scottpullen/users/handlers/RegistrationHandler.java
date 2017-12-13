@@ -34,15 +34,7 @@ public class RegistrationHandler implements Handler {
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
-                maybeToken -> {
-                    if(maybeToken.isPresent()) {
-                        ctx.render(json(maybeToken.get()));
-                    } else {
-                        ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
-                        // Render something useful
-                        ctx.render("Failed to register user");
-                    }
-                },
+                authenticationToken -> ctx.render(json(authenticationToken)),
                 error -> {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());

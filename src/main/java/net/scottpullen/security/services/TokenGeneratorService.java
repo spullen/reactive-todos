@@ -21,20 +21,16 @@ public class TokenGeneratorService {
         this.jwtConfig = jwtConfig;
     }
 
-    public Optional<AuthenticationToken> perform(UserId userId) {
-        try {
-            String token = Jwts.builder()
-                .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
-                .setIssuedAt(new Date())
-                .setExpiration(Date.from(LocalDateTime.now().plusHours(jwtConfig.getTtl()).toInstant(ZoneOffset.UTC)))
-                .claim(SecurityConstants.JWT_USER_OBJECT_ID_CLAIM, userId.toString())
-                .signWith(SignatureAlgorithm.HS512, jwtConfig.getSigningKey())
-                .compact();
+    public AuthenticationToken perform(UserId userId) {
+        String token = Jwts.builder()
+            .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
+            .setIssuedAt(new Date())
+            .setExpiration(Date.from(LocalDateTime.now().plusHours(jwtConfig.getTtl()).toInstant(ZoneOffset.UTC)))
+            .claim(SecurityConstants.JWT_USER_OBJECT_ID_CLAIM, userId.toString())
+            .signWith(SignatureAlgorithm.HS512, jwtConfig.getSigningKey())
+            .compact();
 
-            return Optional.of(new AuthenticationToken(token));
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+        return new AuthenticationToken(token);
     }
 
 }

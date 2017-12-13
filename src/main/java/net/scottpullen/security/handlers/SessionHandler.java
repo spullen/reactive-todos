@@ -3,6 +3,7 @@ package net.scottpullen.security.handlers;
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
+import net.scottpullen.common.exceptions.AuthenticationFailureException;
 import net.scottpullen.common.exceptions.NotFoundException;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.security.commands.SessionCommand;
@@ -35,18 +36,12 @@ public class SessionHandler implements Handler {
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
-                maybeToken -> {
-                    if(maybeToken.isPresent()) {
-                        ctx.render(json(maybeToken.get()));
-                    } else {
-                        ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
-                    }
-                },
+                authenticationToken -> ctx.render(json(authenticationToken)),
                 error -> {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                         ctx.render(json(((ValidationException) error).getValidationResult()));
-                    } else if(error instanceof NotFoundException) {
+                    } else if(error instanceof AuthenticationFailureException || error instanceof NotFoundException) {
                         ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
                     } else {
                         ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
