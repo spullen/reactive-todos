@@ -11,8 +11,6 @@ import net.scottpullen.tasks.repositories.TaskRepository;
 import net.scottpullen.tasks.responses.TaskCreateResponse;
 import net.scottpullen.users.entities.User;
 
-import java.util.Optional;
-
 public class TaskService {
 
     private final TaskRepository taskRepository;
