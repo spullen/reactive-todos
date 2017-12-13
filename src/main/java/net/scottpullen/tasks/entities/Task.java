@@ -18,6 +18,7 @@ public class Task {
     private final Optional<LocalDateTime> completedAt;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
+    private final Optional<LocalDateTime> deletedAt;
 
     public static class Builder {
         private TaskId id;
@@ -30,6 +31,7 @@ public class Task {
         private Optional<LocalDateTime> completedAt = Optional.empty();
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
+        private Optional<LocalDateTime> deletedAt = Optional.empty();
 
         public Builder withId(TaskId id) {
             this.id = id;
@@ -88,6 +90,11 @@ public class Task {
             return this;
         }
 
+        public Builder withDeletedAt(LocalDateTime deletedAt) {
+            this.deletedAt = Optional.ofNullable(deletedAt);
+            return this;
+        }
+
         public Task build() {
             return new Task(
                 id,
@@ -99,7 +106,8 @@ public class Task {
                 dueDate,
                 completedAt,
                 createdAt,
-                updatedAt
+                updatedAt,
+                deletedAt
             );
         }
     }
@@ -110,7 +118,7 @@ public class Task {
 
     private Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
                 Optional<LocalDateTime> dueDate, Optional<LocalDateTime> completedAt, LocalDateTime createdAt,
-                 LocalDateTime updatedAt) {
+                LocalDateTime updatedAt, Optional<LocalDateTime> deletedAt) {
         this.id = id;
         this.userId = userId;
         this.content = content;
@@ -121,6 +129,7 @@ public class Task {
         this.completedAt = completedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
 
     public TaskId getId() {
@@ -163,6 +172,10 @@ public class Task {
         return updatedAt;
     }
 
+    public Optional<LocalDateTime> getDeletedAt() {
+        return deletedAt;
+    }
+
     @Override
     public boolean equals(Object other) {
         if(other == null) {
@@ -184,6 +197,7 @@ public class Task {
                 .append(completedAt, otherTask.getCompletedAt())
                 .append(createdAt, otherTask.getCreatedAt())
                 .append(updatedAt, otherTask.getUpdatedAt())
+                .append(deletedAt, otherTask.getDeletedAt())
                 .isEquals();
         }
     }
@@ -200,6 +214,7 @@ public class Task {
             .append(completedAt)
             .append(createdAt)
             .append(updatedAt)
+            .append(deletedAt)
             .toHashCode();
     }
 

@@ -25,6 +25,16 @@ public class TaskService {
         this.taskRepository = taskRepository;
     }
 
+    /**
+     * Create a task
+     *
+     * Validates the create command
+     * Creates task record
+     *
+     * @param command
+     * @param user
+     * @return
+     */
     public Single<TaskCreateResponse> perform(CreateTaskCommand command, User user) {
         return Single.just(command)
             .flatMap(this::validateCreateCommand)
@@ -68,6 +78,17 @@ public class TaskService {
             });
     }
 
+    /**
+     * Perform an update on a task
+     *
+     * Validates update command
+     * Authorizes that the user is allowed to update the task
+     * Updates task record
+     *
+     * @param command
+     * @param user
+     * @return
+     */
     public Completable perform(UpdateTaskCommand command, User user) {
         // validate command
         // fetch existing task
@@ -82,6 +103,17 @@ public class TaskService {
         });
     }
 
+    /**
+     * Perform a delete on a task (really just setting the deleted at field)
+     *
+     * Validates update command
+     * Authorizes that the user is allowed to update the task
+     * Updates task record
+     *
+     * @param command
+     * @param user
+     * @return
+     */
     public Completable perform(DeleteTaskCommand command, User user) {
         // Validate command
         // fetch existing task

@@ -1,5 +1,6 @@
 package net.scottpullen.tasks.repositories;
 
+import com.google.common.collect.ImmutableList;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.DataAccessException;
@@ -11,13 +12,14 @@ import net.scottpullen.tasks.entities.TaskStatus;
 import net.scottpullen.tasks.jooq.mappers.TaskRecordMapper;
 import net.scottpullen.tasks.tables.Tasks;
 import net.scottpullen.users.entities.UserId;
+import org.jooq.Condition;
 import org.jooq.DSLContext;
-import org.jooq.Record;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
 import javax.sql.DataSource;
 import java.sql.BatchUpdateException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -120,6 +122,12 @@ public class JooqTaskRepository implements TaskRepository {
     public Observable<Task> findAllByTaskStatusAndByUserId(TaskStatus status, UserId userId) {
         return Observable.create(subscriber -> {
             try {
+                List<Condition> conditions = ImmutableList.of(
+                    Tasks.USER_ID.eq(userId),
+                    Tasks.STATUS.eq(status),
+                    Tasks.DELETED_AT.isNull()
+                );
+
                 jooq.select(
                         Tasks.ID,
                         Tasks.USER_ID,
@@ -130,10 +138,11 @@ public class JooqTaskRepository implements TaskRepository {
                         Tasks.DUE_DATE,
                         Tasks.COMPLETED_AT,
                         Tasks.CREATED_AT,
-                        Tasks.UPDATED_AT
+                        Tasks.UPDATED_AT,
+                        Tasks.DELETED_AT
                     )
                     .from(Tasks.TABLE)
-                    .where(Tasks.STATUS.eq(status).and(Tasks.USER_ID.eq(userId)))
+                    .where(conditions)
                     .orderBy(Tasks.DUE_DATE, Tasks.PRIORITY.desc())
                     .fetch(taskRecordMapper)
                     .forEach(subscriber::onNext);

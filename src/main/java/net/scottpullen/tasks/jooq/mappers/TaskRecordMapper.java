@@ -19,6 +19,7 @@ public class TaskRecordMapper implements RecordMapper<Record, Task> {
             .withCompletedAt(record.get(Tasks.COMPLETED_AT))
             .withCreatedAt(record.get(Tasks.CREATED_AT))
             .withUpdatedAt(record.get(Tasks.UPDATED_AT))
+            .withDeletedAt(record.get(Tasks.DELETED_AT))
             .build();
     }
 }

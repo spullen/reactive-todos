@@ -29,4 +29,5 @@ public class Tasks {
     public static final Field<LocalDateTime> COMPLETED_AT = field("completed_at", CustomDataTypes.LOCAL_DATE_TIME);
     public static final Field<LocalDateTime> CREATED_AT = field("created_at", CustomDataTypes.LOCAL_DATE_TIME);
     public static final Field<LocalDateTime> UPDATED_AT = field("updated_at", CustomDataTypes.LOCAL_DATE_TIME);
+    public static final Field<LocalDateTime> DELETED_AT = field("deleted_at", CustomDataTypes.LOCAL_DATE_TIME);
 }
