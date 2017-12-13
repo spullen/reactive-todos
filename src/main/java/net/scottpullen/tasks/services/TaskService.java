@@ -11,7 +11,6 @@ import net.scottpullen.tasks.repositories.TaskRepository;
 import net.scottpullen.tasks.responses.TaskCreateResponse;
 import net.scottpullen.users.entities.User;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class TaskService {
@@ -39,21 +38,16 @@ public class TaskService {
     private Single<Task> buildTaskFromCreateCommand(CreateTaskCommand command, User user) {
         return taskRepository.nextId()
             .map(taskId -> {
-                LocalDateTime now = LocalDateTime.now();
-
-                // TODO move to the builder pattern for this initialization
-                return new Task(
-                    taskId,
-                    user.getId(),
-                    command.getContent(),
-                    command.getNotes(),
-                    TaskStatus.PENDING,
-                    command.getPriority(),
-                    command.getDueDate(),
-                    null,
-                    now,
-                    now
-                );
+                return Task.builder()
+                    .withId(taskId)
+                    .withUserId(user.getId())
+                    .withContent(command.getContent())
+                    .withNotes(command.getNotes())
+                    .withStatus(TaskStatus.PENDING)
+                    .withPriority(command.getPriority())
+                    .withDueDate(command.getDueDate())
+                    .withInitializedTimestamps()
+                    .build();
             });
     }
 

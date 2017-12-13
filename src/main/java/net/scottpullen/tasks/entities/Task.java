@@ -1,11 +1,11 @@
 package net.scottpullen.tasks.entities;
 
-import net.scottpullen.users.entities.User;
 import net.scottpullen.users.entities.UserId;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 public class Task {
     private final TaskId id;
@@ -14,13 +14,103 @@ public class Task {
     private final String notes;
     private final TaskStatus status;
     private final TaskPriority priority;
-    private final LocalDateTime dueDate;
-    private final LocalDateTime completedAt;
+    private final Optional<LocalDateTime> dueDate;
+    private final Optional<LocalDateTime> completedAt;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
 
-    public Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
-                LocalDateTime dueDate, LocalDateTime completedAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public static class Builder {
+        private TaskId id;
+        private UserId userId;
+        private String content;
+        private String notes;
+        private TaskStatus status;
+        private TaskPriority priority;
+        private Optional<LocalDateTime> dueDate = Optional.empty();
+        private Optional<LocalDateTime> completedAt = Optional.empty();
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+
+        public Builder withId(TaskId id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder withUserId(UserId userId) {
+            this.userId = userId;
+            return this;
+        }
+
+        public Builder withContent(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder withNotes(String notes) {
+            this.notes = notes;
+            return this;
+        }
+
+        public Builder withStatus(TaskStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public Builder withPriority(TaskPriority priority) {
+            this.priority = priority;
+            return this;
+        }
+
+        public Builder withDueDate(LocalDateTime dueDate) {
+            this.dueDate = Optional.ofNullable(dueDate);
+            return this;
+        }
+
+        public Builder withCompletedAt(LocalDateTime completedAt) {
+            this.completedAt = Optional.ofNullable(completedAt);
+            return this;
+        }
+
+        public Builder withInitializedTimestamps() {
+            LocalDateTime now = LocalDateTime.now();
+            createdAt = now;
+            updatedAt = now;
+            return this;
+        }
+
+        public Builder withCreatedAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
+            return this;
+        }
+
+        public Builder withUpdatedAt(LocalDateTime updatedAt) {
+            this.updatedAt = updatedAt;
+            return this;
+        }
+
+        public Task build() {
+            return new Task(
+                id,
+                userId,
+                content,
+                notes,
+                status,
+                priority,
+                dueDate,
+                completedAt,
+                createdAt,
+                updatedAt
+            );
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    private Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
+                Optional<LocalDateTime> dueDate, Optional<LocalDateTime> completedAt, LocalDateTime createdAt,
+                 LocalDateTime updatedAt) {
         this.id = id;
         this.userId = userId;
         this.content = content;
@@ -31,6 +121,12 @@ public class Task {
         this.completedAt = completedAt;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
+                LocalDateTime dueDate, LocalDateTime completedAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this(id, userId, content, notes, status, priority, Optional.ofNullable(dueDate),
+            Optional.ofNullable(completedAt), createdAt, updatedAt);
     }
 
     public TaskId getId() {
@@ -57,11 +153,11 @@ public class Task {
         return priority;
     }
 
-    public LocalDateTime getDueDate() {
+    public Optional<LocalDateTime> getDueDate() {
         return dueDate;
     }
 
-    public LocalDateTime getCompletedAt() {
+    public Optional<LocalDateTime> getCompletedAt() {
         return completedAt;
     }
 
