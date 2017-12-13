@@ -49,8 +49,8 @@ public class JooqTaskRepository implements TaskRepository {
                         .set(Tasks.NOTES, task.getNotes())
                         .set(Tasks.STATUS, task.getStatus())
                         .set(Tasks.PRIORITY, task.getPriority())
-                        .set(Tasks.DUE_DATE, task.getDueDate())
-                        .set(Tasks.COMPLETED_AT, task.getCompletedAt())
+                        .set(Tasks.DUE_DATE, task.getDueDate().orElse(null))
+                        .set(Tasks.COMPLETED_AT, task.getCompletedAt().orElse(null))
                         .set(Tasks.CREATED_AT, task.getCreatedAt())
                         .set(Tasks.UPDATED_AT, task.getUpdatedAt())
                         .execute();
@@ -77,8 +77,8 @@ public class JooqTaskRepository implements TaskRepository {
                         .set(Tasks.NOTES, task.getNotes())
                         .set(Tasks.STATUS, task.getStatus())
                         .set(Tasks.PRIORITY, task.getPriority())
-                        .set(Tasks.DUE_DATE, task.getDueDate())
-                        .set(Tasks.COMPLETED_AT, task.getCompletedAt())
+                        .set(Tasks.DUE_DATE, task.getDueDate().orElse(null))
+                        .set(Tasks.COMPLETED_AT, task.getCompletedAt().orElse(null))
                         .set(Tasks.UPDATED_AT, task.getUpdatedAt())
                         .where(Tasks.ID.eq(task.getId()))
                         .execute();
@@ -112,7 +112,21 @@ public class JooqTaskRepository implements TaskRepository {
                     .from(Tasks.TABLE)
                     .where(Tasks.STATUS.eq(status).and(Tasks.USER_ID.eq(userId)))
                     .orderBy(Tasks.DUE_DATE, Tasks.PRIORITY.desc())
-                    .fetchStreamInto(Task.class)
+                    .fetchStream()
+                    .map(record -> {
+                        return Task.builder()
+                            .withId(record.get(Tasks.ID))
+                            .withUserId(record.get(Tasks.USER_ID))
+                            .withContent(record.get(Tasks.CONTENT))
+                            .withNotes(record.get(Tasks.NOTES))
+                            .withStatus(record.get(Tasks.STATUS))
+                            .withPriority(record.get(Tasks.PRIORITY))
+                            .withDueDate(record.get(Tasks.DUE_DATE))
+                            .withCompletedAt(record.get(Tasks.COMPLETED_AT))
+                            .withCreatedAt(record.get(Tasks.CREATED_AT))
+                            .withUpdatedAt(record.get(Tasks.UPDATED_AT))
+                            .build();
+                    })
                     .forEach(subscriber::onNext);
 
                 subscriber.onComplete();

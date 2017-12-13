@@ -123,12 +123,6 @@ public class Task {
         this.updatedAt = updatedAt;
     }
 
-    public Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
-                LocalDateTime dueDate, LocalDateTime completedAt, LocalDateTime createdAt, LocalDateTime updatedAt) {
-        this(id, userId, content, notes, status, priority, Optional.ofNullable(dueDate),
-            Optional.ofNullable(completedAt), createdAt, updatedAt);
-    }
-
     public TaskId getId() {
         return id;
     }
