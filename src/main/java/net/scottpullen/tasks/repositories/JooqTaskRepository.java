@@ -3,6 +3,7 @@ package net.scottpullen.tasks.repositories;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.DataAccessException;
+import net.scottpullen.common.exceptions.NotFoundException;
 import net.scottpullen.common.exceptions.UniqueConstraintException;
 import net.scottpullen.tasks.entities.Task;
 import net.scottpullen.tasks.entities.TaskId;
@@ -10,6 +11,7 @@ import net.scottpullen.tasks.entities.TaskStatus;
 import net.scottpullen.tasks.tables.Tasks;
 import net.scottpullen.users.entities.UserId;
 import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 
@@ -32,6 +34,22 @@ public class JooqTaskRepository implements TaskRepository {
     public Single<TaskId> nextId() {
         return Single.create(subscriber -> {
             subscriber.onSuccess(new TaskId(UUID.randomUUID()));
+        });
+    }
+
+    @Override
+    public Single<Task> find(final TaskId id) {
+        return Single.create(subscriber -> {
+            Record record = jooq.select()
+                .from(Tasks.TABLE)
+                .where(Tasks.ID.eq(id))
+                .fetchOne();
+
+            if(record != null) {
+                subscriber.onSuccess(this.buildFromRecord(record));
+            } else {
+                subscriber.onError(new NotFoundException("Failed to find Task " + id));
+            }
         });
     }
 
@@ -113,20 +131,7 @@ public class JooqTaskRepository implements TaskRepository {
                     .where(Tasks.STATUS.eq(status).and(Tasks.USER_ID.eq(userId)))
                     .orderBy(Tasks.DUE_DATE, Tasks.PRIORITY.desc())
                     .fetchStream()
-                    .map(record -> {
-                        return Task.builder()
-                            .withId(record.get(Tasks.ID))
-                            .withUserId(record.get(Tasks.USER_ID))
-                            .withContent(record.get(Tasks.CONTENT))
-                            .withNotes(record.get(Tasks.NOTES))
-                            .withStatus(record.get(Tasks.STATUS))
-                            .withPriority(record.get(Tasks.PRIORITY))
-                            .withDueDate(record.get(Tasks.DUE_DATE))
-                            .withCompletedAt(record.get(Tasks.COMPLETED_AT))
-                            .withCreatedAt(record.get(Tasks.CREATED_AT))
-                            .withUpdatedAt(record.get(Tasks.UPDATED_AT))
-                            .build();
-                    })
+                    .map(this::buildFromRecord)
                     .forEach(subscriber::onNext);
 
                 subscriber.onComplete();
@@ -153,6 +158,21 @@ public class JooqTaskRepository implements TaskRepository {
                 subscriber.onError(new DataAccessException("Failed to check existence of task", e));
             }
         });
+    }
+
+    private Task buildFromRecord(Record record) {
+        return Task.builder()
+            .withId(record.get(Tasks.ID))
+            .withUserId(record.get(Tasks.USER_ID))
+            .withContent(record.get(Tasks.CONTENT))
+            .withNotes(record.get(Tasks.NOTES))
+            .withStatus(record.get(Tasks.STATUS))
+            .withPriority(record.get(Tasks.PRIORITY))
+            .withDueDate(record.get(Tasks.DUE_DATE))
+            .withCompletedAt(record.get(Tasks.COMPLETED_AT))
+            .withCreatedAt(record.get(Tasks.CREATED_AT))
+            .withUpdatedAt(record.get(Tasks.UPDATED_AT))
+            .build();
     }
 
     private Throwable translateException(final BatchUpdateException exception) {
