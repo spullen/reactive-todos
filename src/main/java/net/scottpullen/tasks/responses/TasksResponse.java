@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TasksResponse implements Serializable {
-    int count;
+    Integer count;
     List<Task> tasks;
 
     public TasksResponse() {

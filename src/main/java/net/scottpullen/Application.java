@@ -1,5 +1,7 @@
 package net.scottpullen;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
@@ -66,6 +68,7 @@ public class Application {
                 .module(UsersModule.class)
                 .module(TasksModule.class)
                 .add(ObjectMapper.class, new ObjectMapper()
+                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
                     .registerModule(new Jdk8Module())
                     .registerModule(new SimpleModule()
                         .addSerializer(LocalDateTime.class, new LocalDateTimeSerializer(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
