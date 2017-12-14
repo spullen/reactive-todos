@@ -14,6 +14,8 @@ import net.scottpullen.tasks.repositories.TaskRepository;
 import net.scottpullen.tasks.validators.UpdateTaskCommandValidator;
 import net.scottpullen.users.entities.User;
 
+import java.time.LocalDateTime;
+
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
 
 public class TaskUpdateService {
@@ -39,14 +41,7 @@ public class TaskUpdateService {
             .flatMap(this::validateCommand)
             .flatMap(validatedCommand -> taskRepository.find(validatedCommand.getId()))
             .flatMap(task -> authorize(task, user))
-            .map(task -> {
-                // build new task
-                // set completed at if the task is complete
-                if(command.getStatus() == TaskStatus.COMPLETED) {
-
-                }
-                return task;
-            })
+            .map(task -> buildUpdatedTask(task, command))
             .flatMap(taskRepository::update)
             .toCompletable();
     }
@@ -80,5 +75,26 @@ public class TaskUpdateService {
                 subscribe.onError(new NotAuthorizedException("User " + user.getId() + " is not authorized to update Task " + task.getId()));
             }
         });
+    }
+
+    private Task buildUpdatedTask(Task task, UpdateTaskCommand command) {
+        LocalDateTime now = LocalDateTime.now();
+
+        Task.Builder taskBuilder = Task.builder()
+            .withId(task.getId())
+            .withUserId(task.getUserId())
+            .withContent(command.getContent())
+            .withNotes(command.getNotes())
+            .withStatus(command.getStatus())
+            .withPriority(command.getPriority())
+            .withDueDate(command.getDueDate())
+            .withCreatedAt(task.getCreatedAt())
+            .withUpdatedAt(now);
+
+        if(command.getStatus() == TaskStatus.COMPLETED) {
+            taskBuilder.withCompletedAt(now);
+        }
+
+        return taskBuilder.build();
     }
 }
