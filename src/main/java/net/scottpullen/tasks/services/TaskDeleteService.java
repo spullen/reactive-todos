@@ -41,8 +41,7 @@ public class TaskDeleteService {
             .flatMap(validatedCommand -> taskRepository.find(validatedCommand.getId()))
             .flatMap(task -> authorize(task, user))
             .map(task -> task.getId())
-            .map(taskRepository::delete)
-            .toCompletable();
+            .flatMapCompletable(taskRepository::delete);
     }
 
     private Single<DeleteTaskCommand> validateCommand(DeleteTaskCommand command) {
