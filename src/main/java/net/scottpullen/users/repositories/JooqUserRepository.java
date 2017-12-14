@@ -2,6 +2,7 @@ package net.scottpullen.users.repositories;
 
 import io.reactivex.Completable;
 import io.reactivex.Single;
+import net.scottpullen.common.exceptions.NotFoundException;
 import net.scottpullen.users.entities.User;
 import net.scottpullen.users.entities.UserId;
 import net.scottpullen.common.exceptions.DataAccessException;
@@ -16,6 +17,8 @@ import java.sql.BatchUpdateException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static net.scottpullen.common.ArgumentPreconditions.notBlank;
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
 
 public class JooqUserRepository implements UserRepository {
@@ -23,6 +26,8 @@ public class JooqUserRepository implements UserRepository {
     private final DSLContext jooq;
 
     public JooqUserRepository(final DataSource dataSource) {
+        required(dataSource, "DataSource required");
+
         jooq = DSL.using(dataSource, SQLDialect.POSTGRES);
     }
 
@@ -35,6 +40,8 @@ public class JooqUserRepository implements UserRepository {
 
     @Override
     public Single<UserId> create(User user) {
+        required(user, "User required");
+
         return Single.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
@@ -61,6 +68,8 @@ public class JooqUserRepository implements UserRepository {
 
     @Override
     public Completable update(User user) {
+        required(user, "user required");
+
         return Completable.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
@@ -84,7 +93,9 @@ public class JooqUserRepository implements UserRepository {
     }
 
     @Override
-    public Single<Optional<User>> findById(UserId id) {
+    public Single<User> findById(UserId id) {
+        required(id, "UserId required");
+
         return Single.create(subscriber -> {
             try {
                 Optional<User> maybeUser = jooq.select(
@@ -100,7 +111,11 @@ public class JooqUserRepository implements UserRepository {
                     .limit(1)
                     .fetchOptionalInto(User.class);
 
-                subscriber.onSuccess(maybeUser);
+                if(maybeUser.isPresent()) {
+                    subscriber.onSuccess(maybeUser.get());
+                } else {
+                    subscriber.onError(new NotFoundException("Failed to find user by id " + id));
+                }
             } catch (DataAccessException e) {
                 throw e;
             } catch (Exception e) {
@@ -110,7 +125,10 @@ public class JooqUserRepository implements UserRepository {
     }
 
     @Override
-    public Single<Optional<User>> findByEmail(String email) {
+    public Single<User> findByEmail(String email) {
+        required(email, "email required");
+        notBlank(email, "email cannot be blank");
+
         return Single.create(subscriber -> {
             try {
                 Optional<User> maybeUser = jooq.select(
@@ -126,7 +144,11 @@ public class JooqUserRepository implements UserRepository {
                 .limit(1)
                 .fetchOptionalInto(User.class);
 
-                subscriber.onSuccess(maybeUser);
+                if(maybeUser.isPresent()) {
+                    subscriber.onSuccess(maybeUser.get());
+                } else {
+                    subscriber.onError(new NotFoundException("Failed to find user by email " + email));
+                }
             } catch (DataAccessException e) {
                 throw e;
             } catch (Exception e) {
@@ -137,6 +159,8 @@ public class JooqUserRepository implements UserRepository {
 
     @Override
     public Single<Boolean> existsById(UserId id) {
+        required(id, "UserId required");
+
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(
@@ -154,6 +178,9 @@ public class JooqUserRepository implements UserRepository {
 
     @Override
     public Single<Boolean> existsByEmail(String email) {
+        required(email, "email required");
+        notBlank(email, "email cannot be blank");
+
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(

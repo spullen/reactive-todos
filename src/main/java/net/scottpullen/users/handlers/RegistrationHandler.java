@@ -10,6 +10,7 @@ import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
@@ -20,6 +21,9 @@ public class RegistrationHandler implements Handler {
 
     @Inject
     public RegistrationHandler(Scheduler scheduler, RegistrationService registrationService) {
+        required(scheduler, "Scheduler required");
+        required(registrationService, "RegistrationService required");
+
         this.scheduler = scheduler;
         this.registrationService = registrationService;
     }

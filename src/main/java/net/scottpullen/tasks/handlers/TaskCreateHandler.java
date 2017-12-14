@@ -11,6 +11,7 @@ import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
@@ -21,6 +22,9 @@ public class TaskCreateHandler implements Handler {
 
     @Inject
     public TaskCreateHandler(Scheduler scheduler, TaskCreateService taskCreateService) {
+        required(scheduler, "Scheduler required");
+        required(taskCreateService, "TaskCreateService required");
+
         this.scheduler = scheduler;
         this.taskCreateService = taskCreateService;
     }

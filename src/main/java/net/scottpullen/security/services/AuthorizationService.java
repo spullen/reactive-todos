@@ -10,17 +10,26 @@ import net.scottpullen.security.SecurityConstants;
 
 import java.util.Optional;
 
+import static net.scottpullen.common.ArgumentPreconditions.notBlank;
+import static net.scottpullen.common.ArgumentPreconditions.required;
+
 public class AuthorizationService {
 
     private final JwtConfig jwtConfig;
     private final UserRepository userRepository;
 
     public AuthorizationService(final JwtConfig jwtConfig, final UserRepository userRepository) {
+        required(jwtConfig, "JwtConfig required");
+        required(userRepository, "UserRepository required");
+
         this.jwtConfig = jwtConfig;
         this.userRepository = userRepository;
     }
 
-    public Single<Optional<User>> perform(final String token) {
+    public Single<User> perform(final String token) {
+        required(token, "token required");
+        notBlank(token, "token cannot be blank");
+
         return Single.create(subscriber -> {
             try {
                 String userIdFromToken = (String) Jwts.parser()
@@ -34,7 +43,8 @@ public class AuthorizationService {
                     userRepository.findById(userId)
                         .subscribe(subscriber::onSuccess, subscriber::onError); // Is there a better way to compose this??
                 } else {
-                    subscriber.onSuccess(Optional.empty());
+                    // come up with a better exception for this
+                    subscriber.onError(new IllegalArgumentException("Failed to parse user id from token"));
                 }
             } catch (Exception e) {
                 subscriber.onError(e);

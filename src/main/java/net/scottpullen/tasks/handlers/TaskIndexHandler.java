@@ -11,6 +11,7 @@ import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static ratpack.jackson.Jackson.json;
 
 public class TaskIndexHandler implements Handler {
@@ -20,6 +21,9 @@ public class TaskIndexHandler implements Handler {
 
     @Inject
     public TaskIndexHandler(Scheduler scheduler, TaskRepository taskRepository) {
+        required(scheduler, "Scheduler required");
+        required(taskRepository, "TaskRepository required");
+
         this.scheduler = scheduler;
         this.taskRepository = taskRepository;
     }

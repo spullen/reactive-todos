@@ -13,15 +13,21 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Optional;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
+
 public class TokenGeneratorService {
 
     private final JwtConfig jwtConfig;
 
     public TokenGeneratorService(final JwtConfig jwtConfig) {
+        required(jwtConfig, "JwtConfig required");
+
         this.jwtConfig = jwtConfig;
     }
 
     public AuthenticationToken perform(UserId userId) {
+        required(userId, "UserId required");
+
         String token = Jwts.builder()
             .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
             .setIssuedAt(new Date())

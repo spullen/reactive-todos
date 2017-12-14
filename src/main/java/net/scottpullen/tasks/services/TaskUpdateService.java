@@ -17,11 +17,14 @@ import net.scottpullen.users.entities.User;
 import java.time.LocalDateTime;
 
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
+import static net.scottpullen.common.ArgumentPreconditions.required;
 
 public class TaskUpdateService {
     private final TaskRepository taskRepository;
 
     public TaskUpdateService(TaskRepository taskRepository) {
+        required(taskRepository, "TaskRepository required");
+
         this.taskRepository = taskRepository;
     }
 
@@ -37,6 +40,9 @@ public class TaskUpdateService {
      * @return
      */
     public Completable perform(UpdateTaskCommand command, User user) {
+        required(command, "UpdateTaskCommand required");
+        required(user, "User required");
+
         return Single.just(command)
             .flatMap(this::validateCommand)
             .flatMap(validatedCommand -> taskRepository.find(validatedCommand.getId()))

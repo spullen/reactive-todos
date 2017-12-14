@@ -2,10 +2,14 @@ package net.scottpullen.common.entities;
 
 import java.util.UUID;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
+
 public class EntityId {
     private final UUID id;
 
     public EntityId(UUID id) {
+        required(id, "id required");
+
         this.id = id;
     }
 

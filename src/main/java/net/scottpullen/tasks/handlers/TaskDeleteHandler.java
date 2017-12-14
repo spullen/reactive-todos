@@ -12,6 +12,7 @@ import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static ratpack.jackson.Jackson.json;
 
 public class TaskDeleteHandler implements Handler {
@@ -21,6 +22,9 @@ public class TaskDeleteHandler implements Handler {
 
     @Inject
     public TaskDeleteHandler(Scheduler scheduler, TaskDeleteService taskDeleteService) {
+        required(scheduler, "Scheduler required");
+        required(taskDeleteService, "TaskDeleteService required");
+
         this.scheduler = scheduler;
         this.taskDeleteService = taskDeleteService;
     }

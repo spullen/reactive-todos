@@ -16,11 +16,14 @@ import net.scottpullen.tasks.validators.UpdateTaskCommandValidator;
 import net.scottpullen.users.entities.User;
 
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
+import static net.scottpullen.common.ArgumentPreconditions.required;
 
 public class TaskDeleteService {
     private final TaskRepository taskRepository;
 
     public TaskDeleteService(TaskRepository taskRepository) {
+        required(taskRepository, "TaskRepository required");
+
         this.taskRepository = taskRepository;
     }
 
@@ -36,6 +39,9 @@ public class TaskDeleteService {
      * @return
      */
     public Completable perform(DeleteTaskCommand command, User user) {
+        required(command, "DeleteTaskCommand required");
+        required(user, "User required");
+
         return Single.just(command)
             .flatMap(this::validateCommand)
             .flatMap(validatedCommand -> taskRepository.find(validatedCommand.getId()))

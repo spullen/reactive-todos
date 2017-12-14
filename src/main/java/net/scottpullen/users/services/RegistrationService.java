@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.time.LocalDateTime;
 
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
+import static net.scottpullen.common.ArgumentPreconditions.required;
 
 public class RegistrationService {
 
@@ -28,11 +29,16 @@ public class RegistrationService {
     private final UserRepository userRepository;
 
     public RegistrationService(TokenGeneratorService tokenGeneratorService, UserRepository userRepository) {
+        required(tokenGeneratorService, "TokenGeneratorService required");
+        required(userRepository, "UserRepository required");
+
         this.tokenGeneratorService = tokenGeneratorService;
         this.userRepository = userRepository;
     }
 
     public Single<AuthenticationToken> perform(RegistrationCommand command) {
+        required(command, "RegistrationCommand required");
+
         return Single.just(command)
             .flatMap(this::validateCommand)
             .flatMap(this::buildUser)

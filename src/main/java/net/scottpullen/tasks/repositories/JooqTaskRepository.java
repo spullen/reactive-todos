@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static net.scottpullen.common.constants.DatabaseExceptionCodes.UNIQUE_VIOLATION_CODE;
 import static net.scottpullen.tasks.tables.Tasks.ID;
 
@@ -35,6 +36,8 @@ public class JooqTaskRepository implements TaskRepository {
     private final DSLContext jooq;
 
     public JooqTaskRepository(DataSource dataSource) {
+        required(dataSource, "DataSource required");
+
         jooq = DSL.using(dataSource, SQLDialect.POSTGRES);
     }
 
@@ -47,6 +50,8 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Single<Task> find(final TaskId id) {
+        required(id, "TaskId required");
+
         return Single.create(subscriber -> {
             Optional<Task> maybeTask = jooq.select()
                 .from(Tasks.TABLE)
@@ -64,6 +69,8 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Single<Task> create(Task task) {
+        required(task, "Task required");
+
         return Single.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
@@ -94,6 +101,8 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Single<Task> update(Task task) {
+        required(task, "Task required");
+
         return Single.create(subscriber -> {
             try {
                 jooq.transaction(configuration -> {
@@ -122,6 +131,8 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Completable delete(TaskId id) {
+        required(id, "TaskId required");
+
         return Completable.create(subscriber -> {
            try {
                LocalDateTime now = LocalDateTime.now();
@@ -144,6 +155,9 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Observable<Task> findAllByTaskStatusAndByUserId(TaskStatus status, UserId userId) {
+        required(status, "TaskStatus required");
+        required(userId, "UserId required");
+
         return Observable.create(subscriber -> {
             try {
                 List<Condition> conditions = ImmutableList.of(
@@ -182,6 +196,8 @@ public class JooqTaskRepository implements TaskRepository {
 
     @Override
     public Single<Boolean> exists(TaskId taskId) {
+        required(taskId, "TaskId required");
+
         return Single.create(subscriber -> {
             try {
                 Boolean exists = jooq.fetchExists(

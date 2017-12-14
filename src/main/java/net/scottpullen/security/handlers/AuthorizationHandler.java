@@ -14,6 +14,8 @@ import ratpack.http.Headers;
 import ratpack.registry.Registry;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
+
 public class AuthorizationHandler implements Handler {
 
     private static final Logger log = LoggerFactory.getLogger(AuthorizationHandler.class);
@@ -23,6 +25,9 @@ public class AuthorizationHandler implements Handler {
 
     @Inject
     public AuthorizationHandler(final Scheduler scheduler, final AuthorizationService authorizationService) {
+        required(scheduler, "Scheduler required");
+        required(authorizationService, "AuthorizationService required");
+
         this.scheduler = scheduler;
         this.authorizationService = authorizationService;
     }
@@ -48,14 +53,7 @@ public class AuthorizationHandler implements Handler {
                 .toObservable()
                 .compose(RxRatpack::bindExec)
                 .subscribe(
-                    maybeUser -> {
-                        if(maybeUser.isPresent()) {
-                            // TODO: provide a wrapper for AuthenticatedUser
-                            ctx.next(Registry.single(maybeUser.get()));
-                        } else {
-                            ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
-                        }
-                    },
+                    user -> ctx.next(Registry.single(user)),
                     error -> ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code())
                 );
         }

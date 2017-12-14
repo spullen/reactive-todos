@@ -12,6 +12,7 @@ import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
 import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
@@ -22,6 +23,9 @@ public class SessionHandler implements Handler {
 
     @Inject
     public SessionHandler(Scheduler scheduler, CreateSessionService sessionService) {
+        required(scheduler, "Scheduler required");
+        required(sessionService, "SessionService required");
+        
         this.scheduler = scheduler;
         this.sessionService = sessionService;
     }

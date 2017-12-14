@@ -13,12 +13,15 @@ import net.scottpullen.tasks.validators.CreateTaskCommandValidator;
 import net.scottpullen.users.entities.User;
 
 import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
+import static net.scottpullen.common.ArgumentPreconditions.required;
 
 public class TaskCreateService {
 
     private final TaskRepository taskRepository;
 
     public TaskCreateService(TaskRepository taskRepository) {
+        required(taskRepository, "TaskRepository required");
+
         this.taskRepository = taskRepository;
     }
 
@@ -33,6 +36,9 @@ public class TaskCreateService {
      * @return
      */
     public Single<TaskCreateResponse> perform(CreateTaskCommand command, User user) {
+        required(command, "CreateTaskCommand required");
+        required(user, "User required");
+
         return Single.just(command)
             .flatMap(this::validateCommand)
             .flatMap((validatedCommand) -> this.buildTaskFromCreateCommand(validatedCommand, user))

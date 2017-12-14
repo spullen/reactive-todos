@@ -11,17 +11,24 @@ import net.scottpullen.users.repositories.UserRepository;
 
 import java.util.Optional;
 
+import static net.scottpullen.common.ArgumentPreconditions.required;
+
 public class CreateSessionService {
 
     private final TokenGeneratorService tokenGeneratorService;
     private final UserRepository userRepository;
 
     public CreateSessionService(final TokenGeneratorService tokenGeneratorService, final UserRepository userRepository) {
+        required(tokenGeneratorService, "TokenGeneratorService required");
+        required(userRepository, "UserRepository required");
+
         this.tokenGeneratorService = tokenGeneratorService;
         this.userRepository = userRepository;
     }
 
     public Single<AuthenticationToken> perform(SessionCommand command) {
+        required(command, "SessionCommand required");
+        
         return userRepository.findByEmail(command.getEmail())
             .flatMap(this::verifyUser)
             .flatMap((user) -> verifyPassword(command, user));
