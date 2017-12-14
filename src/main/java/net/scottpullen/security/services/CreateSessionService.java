@@ -3,13 +3,10 @@ package net.scottpullen.security.services;
 import com.lambdaworks.crypto.SCryptUtil;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.AuthenticationFailureException;
-import net.scottpullen.common.exceptions.NotFoundException;
 import net.scottpullen.security.commands.SessionCommand;
 import net.scottpullen.security.entities.AuthenticationToken;
 import net.scottpullen.users.entities.User;
 import net.scottpullen.users.repositories.UserRepository;
-
-import java.util.Optional;
 
 import static net.scottpullen.common.ArgumentPreconditions.required;
 
@@ -30,19 +27,7 @@ public class CreateSessionService {
         required(command, "SessionCommand required");
         
         return userRepository.findByEmail(command.getEmail())
-            .flatMap(this::verifyUser)
-            .flatMap((user) -> verifyPassword(command, user));
-    }
-
-
-    private Single<User> verifyUser(Optional<User> maybeUser) {
-        return Single.create(subscriber -> {
-            if(maybeUser.isPresent()) {
-                subscriber.onSuccess(maybeUser.get());
-            } else {
-                subscriber.onError(new NotFoundException("Failed to find user for given email."));
-            }
-        });
+            .flatMap(user -> verifyPassword(command, user));
     }
 
     private Single<AuthenticationToken> verifyPassword(SessionCommand command, User user) {
