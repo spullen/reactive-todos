@@ -15,7 +15,7 @@ public class UpdateTaskCommandValidator extends ValidatorHandler<UpdateTaskComma
     private final static String PRIORITY_REQUIRED_MSG = "task.priority.required";
 
     /**
-     * Validates CreateTaskCommand
+     * Validates UpdateTaskCommand
      *
      * Verifies taskId is present
      * Verifies priority is present

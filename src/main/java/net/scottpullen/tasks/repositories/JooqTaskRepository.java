@@ -1,6 +1,7 @@
 package net.scottpullen.tasks.repositories;
 
 import com.google.common.collect.ImmutableList;
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 import net.scottpullen.common.exceptions.DataAccessException;
@@ -19,6 +20,7 @@ import org.jooq.impl.DSL;
 
 import javax.sql.DataSource;
 import java.sql.BatchUpdateException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -115,6 +117,28 @@ public class JooqTaskRepository implements TaskRepository {
             } catch(Exception e) {
                 subscriber.onError(new DataAccessException("Error while updating Task: " + task.toString(), e));
             }
+        });
+    }
+
+    @Override
+    public Completable delete(TaskId id) {
+        return Completable.create(subscriber -> {
+           try {
+               LocalDateTime now = LocalDateTime.now();
+
+               jooq.update(Tasks.TABLE)
+                   .set(Tasks.STATUS, TaskStatus.CANCELED)
+                   .set(Tasks.DELETED_AT, now)
+                   .set(Tasks.UPDATED_AT, now)
+                   .where(Tasks.ID.eq(id))
+                   .execute();
+
+               subscriber.onComplete();
+           } catch(org.jooq.exception.DataAccessException e) {
+               subscriber.onError(translateException(e));
+           } catch(Exception e) {
+               subscriber.onError(new DataAccessException("Error while deleting Task: " + id, e));
+           }
         });
     }
 
