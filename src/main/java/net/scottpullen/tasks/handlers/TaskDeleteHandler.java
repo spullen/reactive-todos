@@ -6,25 +6,23 @@ import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.DeleteTaskCommand;
 import net.scottpullen.tasks.entities.TaskId;
-import net.scottpullen.tasks.services.TaskService;
+import net.scottpullen.tasks.services.TaskDeleteService;
 import net.scottpullen.users.entities.User;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
-
-import java.util.HashMap;
 
 import static ratpack.jackson.Jackson.json;
 
 public class TaskDeleteHandler implements Handler {
 
     private final Scheduler scheduler;
-    private final TaskService taskService;
+    private final TaskDeleteService taskDeleteService;
 
     @Inject
-    public TaskDeleteHandler(Scheduler scheduler, TaskService taskService) {
+    public TaskDeleteHandler(Scheduler scheduler, TaskDeleteService taskDeleteService) {
         this.scheduler = scheduler;
-        this.taskService = taskService;
+        this.taskDeleteService = taskDeleteService;
     }
 
     @Override
@@ -32,7 +30,7 @@ public class TaskDeleteHandler implements Handler {
         User currentUser = ctx.get(User.class);
         TaskId taskId = ctx.get(TaskId.class);
 
-        taskService.perform(new DeleteTaskCommand(taskId), currentUser)
+        taskDeleteService.perform(new DeleteTaskCommand(taskId), currentUser)
             .observeOn(scheduler)
             .toObservable()
             .compose(RxRatpack::bindExec)

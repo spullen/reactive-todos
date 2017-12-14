@@ -5,7 +5,7 @@ import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.CreateTaskCommand;
-import net.scottpullen.tasks.services.TaskService;
+import net.scottpullen.tasks.services.TaskCreateService;
 import net.scottpullen.users.entities.User;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
@@ -17,12 +17,12 @@ import static ratpack.jackson.Jackson.json;
 public class TaskCreateHandler implements Handler {
 
     private final Scheduler scheduler;
-    private final TaskService taskService;
+    private final TaskCreateService taskCreateService;
 
     @Inject
-    public TaskCreateHandler(Scheduler scheduler, TaskService taskService) {
+    public TaskCreateHandler(Scheduler scheduler, TaskCreateService taskCreateService) {
         this.scheduler = scheduler;
-        this.taskService = taskService;
+        this.taskCreateService = taskCreateService;
     }
 
     @Override
@@ -33,7 +33,7 @@ public class TaskCreateHandler implements Handler {
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
             .observeOn(scheduler)
-            .flatMap(command -> taskService.perform(command, currentUser))
+            .flatMap(command -> taskCreateService.perform(command, currentUser))
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(

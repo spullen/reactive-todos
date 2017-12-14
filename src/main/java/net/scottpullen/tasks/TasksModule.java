@@ -7,7 +7,9 @@ import com.google.inject.Singleton;
 import net.scottpullen.tasks.handlers.*;
 import net.scottpullen.tasks.repositories.JooqTaskRepository;
 import net.scottpullen.tasks.repositories.TaskRepository;
-import net.scottpullen.tasks.services.TaskService;
+import net.scottpullen.tasks.services.TaskCreateService;
+import net.scottpullen.tasks.services.TaskDeleteService;
+import net.scottpullen.tasks.services.TaskUpdateService;
 
 import javax.sql.DataSource;
 
@@ -30,7 +32,19 @@ public class TasksModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public TaskService getTaskService(final TaskRepository taskRepository) {
-        return new TaskService(taskRepository);
+    public TaskCreateService getTaskCreateService(final TaskRepository taskRepository) {
+        return new TaskCreateService(taskRepository);
+    }
+
+    @Provides
+    @Singleton
+    public TaskUpdateService getTaskUpdateService(final TaskRepository taskRepository) {
+        return new TaskUpdateService(taskRepository);
+    }
+
+    @Provides
+    @Singleton
+    public TaskDeleteService getTaskDeleteService(final TaskRepository taskRepository) {
+        return new TaskDeleteService(taskRepository);
     }
 }

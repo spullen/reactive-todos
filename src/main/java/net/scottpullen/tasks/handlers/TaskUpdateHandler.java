@@ -6,13 +6,11 @@ import io.reactivex.Scheduler;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.UpdateTaskCommand;
 import net.scottpullen.tasks.entities.TaskId;
-import net.scottpullen.tasks.services.TaskService;
+import net.scottpullen.tasks.services.TaskUpdateService;
 import net.scottpullen.users.entities.User;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
-
-import java.util.HashMap;
 
 import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
@@ -20,12 +18,12 @@ import static ratpack.jackson.Jackson.json;
 public class TaskUpdateHandler implements Handler {
 
     private final Scheduler scheduler;
-    private final TaskService taskService;
+    private final TaskUpdateService taskUpdateService;
 
     @Inject
-    public TaskUpdateHandler(Scheduler scheduler, TaskService taskService) {
+    public TaskUpdateHandler(Scheduler scheduler, TaskUpdateService taskUpdateService) {
         this.scheduler = scheduler;
-        this.taskService = taskService;
+        this.taskUpdateService = taskUpdateService;
     }
 
     @Override
@@ -40,7 +38,7 @@ public class TaskUpdateHandler implements Handler {
                 command.setId(ctx.get(TaskId.class));
                 return command;
             })
-            .flatMapCompletable(command -> taskService.perform(command, currentUser))
+            .flatMapCompletable(command -> taskUpdateService.perform(command, currentUser))
             .toObservable()
             .compose(RxRatpack::bindExec)
             .subscribe(
