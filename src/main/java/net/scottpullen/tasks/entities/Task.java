@@ -14,11 +14,11 @@ public class Task {
     private final String notes;
     private final TaskStatus status;
     private final TaskPriority priority;
-    private final Optional<LocalDateTime> dueDate;
-    private final Optional<LocalDateTime> completedAt;
+    private final LocalDateTime dueDate;
+    private final LocalDateTime completedAt;
     private final LocalDateTime createdAt;
     private final LocalDateTime updatedAt;
-    private final Optional<LocalDateTime> deletedAt;
+    private final LocalDateTime deletedAt;
 
     public static class Builder {
         private TaskId id;
@@ -27,11 +27,11 @@ public class Task {
         private String notes;
         private TaskStatus status;
         private TaskPriority priority;
-        private Optional<LocalDateTime> dueDate = Optional.empty();
-        private Optional<LocalDateTime> completedAt = Optional.empty();
+        private LocalDateTime dueDate = null;
+        private LocalDateTime completedAt = null;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        private Optional<LocalDateTime> deletedAt = Optional.empty();
+        private LocalDateTime deletedAt = null;
 
         public Builder withId(TaskId id) {
             this.id = id;
@@ -64,12 +64,12 @@ public class Task {
         }
 
         public Builder withDueDate(LocalDateTime dueDate) {
-            this.dueDate = Optional.ofNullable(dueDate);
+            this.dueDate = dueDate;
             return this;
         }
 
         public Builder withCompletedAt(LocalDateTime completedAt) {
-            this.completedAt = Optional.ofNullable(completedAt);
+            this.completedAt = completedAt;
             return this;
         }
 
@@ -91,7 +91,7 @@ public class Task {
         }
 
         public Builder withDeletedAt(LocalDateTime deletedAt) {
-            this.deletedAt = Optional.ofNullable(deletedAt);
+            this.deletedAt = deletedAt;
             return this;
         }
 
@@ -112,13 +112,11 @@ public class Task {
         }
     }
 
-    public static Builder builder() {
-        return new Builder();
-    }
+    public static Builder builder() { return new Builder(); }
 
     private Task(final TaskId id, UserId userId, String content, String notes, TaskStatus status, TaskPriority priority,
-                Optional<LocalDateTime> dueDate, Optional<LocalDateTime> completedAt, LocalDateTime createdAt,
-                LocalDateTime updatedAt, Optional<LocalDateTime> deletedAt) {
+                LocalDateTime dueDate, LocalDateTime completedAt, LocalDateTime createdAt,
+                LocalDateTime updatedAt, LocalDateTime deletedAt) {
         this.id = id;
         this.userId = userId;
         this.content = content;
@@ -132,49 +130,17 @@ public class Task {
         this.deletedAt = deletedAt;
     }
 
-    public TaskId getId() {
-        return id;
-    }
-
-    public UserId getUserId() {
-        return userId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public String getNotes() {
-        return notes;
-    }
-
-    public TaskStatus getStatus() {
-        return status;
-    }
-
-    public TaskPriority getPriority() {
-        return priority;
-    }
-
-    public Optional<LocalDateTime> getDueDate() {
-        return dueDate;
-    }
-
-    public Optional<LocalDateTime> getCompletedAt() {
-        return completedAt;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public Optional<LocalDateTime> getDeletedAt() {
-        return deletedAt;
-    }
+    public TaskId getId() { return id; }
+    public UserId getUserId() { return userId; }
+    public String getContent() { return content; }
+    public String getNotes() { return notes; }
+    public TaskStatus getStatus() { return status; }
+    public TaskPriority getPriority() { return priority; }
+    public Optional<LocalDateTime> getDueDate() { return Optional.ofNullable(dueDate); }
+    public Optional<LocalDateTime> getCompletedAt() { return Optional.ofNullable(completedAt); }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public Optional<LocalDateTime> getDeletedAt() { return Optional.ofNullable(deletedAt); }
 
     @Override
     public boolean equals(Object other) {
@@ -193,11 +159,11 @@ public class Task {
                 .append(notes, otherTask.getNotes())
                 .append(status, otherTask.getStatus())
                 .append(priority, otherTask.getPriority())
-                .append(dueDate, otherTask.getDueDate())
-                .append(completedAt, otherTask.getCompletedAt())
+                .append(dueDate, otherTask.getDueDate().orElse(null))
+                .append(completedAt, otherTask.getCompletedAt().orElse(null))
                 .append(createdAt, otherTask.getCreatedAt())
                 .append(updatedAt, otherTask.getUpdatedAt())
-                .append(deletedAt, otherTask.getDeletedAt())
+                .append(deletedAt, otherTask.getDeletedAt().orElse(null))
                 .isEquals();
         }
     }
