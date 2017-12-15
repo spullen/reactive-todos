@@ -345,7 +345,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMyMDk4MzgsImV4cCI6MTU5MDk2OTgzOCwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.F5bTnuNR8LGhh1R7RolIuakKkThHnGYMBtUVoKMI0B13fwZkge2KX8wsxmeKk46YsZTMsvrB3-CjLrWjTfu98w",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMzMDE3NDYsImV4cCI6MTU5MTA2MTc0NiwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.GAI0hLht_jO8J7Zoruk_AI1Rf5LVntXuaRxPAY5X5IoXX587GxwFcYayul83WjrCjUxr3utfDoy7ZjreaNJgyA",
 									"type": "string"
 								}
 							]
@@ -359,8 +359,45 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"content\": \"This is a task Update 1\",\n\t\"notes\": \"here are some notes Update 1\",\n\t\"priority\": 1,\n\t\"dueDate\": \"2018-01-20T12:30:00Z\"\n}"
+							"raw": "{\n\t\"content\": \"This is a task Update 1\",\n\t\"notes\": \"here are some notes Update 1\",\n\t\"status\": \"PENDING\",\n\t\"priority\": 1,\n\t\"dueDate\": \"2018-01-20T12:30:00Z\"\n}"
 						},
+						"url": {
+							"raw": "localhost:5050/api/tasks/86a3cd4f-1943-4760-b05c-e9468cbf63a5",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"tasks",
+								"86a3cd4f-1943-4760-b05c-e9468cbf63a5"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Task Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMyMDk4MzgsImV4cCI6MTU5MDk2OTgzOCwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.F5bTnuNR8LGhh1R7RolIuakKkThHnGYMBtUVoKMI0B13fwZkge2KX8wsxmeKk46YsZTMsvrB3-CjLrWjTfu98w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
 						"url": {
 							"raw": "localhost:5050/api/tasks/86a3cd4f-1943-4760-b05c-e9468cbf63a5",
 							"host": [
