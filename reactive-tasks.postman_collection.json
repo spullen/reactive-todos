@@ -22,7 +22,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"email\":\"s.pullen05@gmail.com\",\n\t\"fullName\":\"Scott Pullen\",\n\t\"password\":\"s3cr3t!\",\n\t\"passwordConfirmation\":\"s3cr3t!\"\n}"
+							"raw": "{\n\t\"email\":\"test3@test.com\",\n\t\"fullName\":\"Test1 Test1\",\n\t\"password\":\"s3cr3t!1234\",\n\t\"passwordConfirmation\":\"s3cr3t!1234\"\n}"
 						},
 						"url": {
 							"raw": "localhost:5050/api/registration",
@@ -111,7 +111,7 @@
 							"bearer": [
 								{
 									"key": "token",
-									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTEyMjg3MTgsImV4cCI6MTU4ODk4ODcxOCwidXNlcklkIjoiN2M4ZDVmMzctNzMwMS00ZGZhLWExNDEtYzEyMWUxMjhhYTBlIn0.spFM45hbUDGqcQMbYrohwOXBwvAQwtDppagmR3pY4SFPUzetnR9S9eSrWJjN-dab5nYW8c_MyAVleVHD4kYmSw",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMyMDk4MzgsImV4cCI6MTU5MDk2OTgzOCwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.F5bTnuNR8LGhh1R7RolIuakKkThHnGYMBtUVoKMI0B13fwZkge2KX8wsxmeKk46YsZTMsvrB3-CjLrWjTfu98w",
 									"type": "string"
 								}
 							]
@@ -120,7 +120,8 @@
 						"header": [
 							{
 								"key": "Content-Length",
-								"value": "application/json"
+								"value": "application/json",
+								"disabled": true
 							}
 						],
 						"body": {},
@@ -260,7 +261,83 @@
 		{
 			"name": "Task Management",
 			"description": "",
-			"item": []
+			"item": [
+				{
+					"name": "Retrieve Tasks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMyMDk4MzgsImV4cCI6MTU5MDk2OTgzOCwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.F5bTnuNR8LGhh1R7RolIuakKkThHnGYMBtUVoKMI0B13fwZkge2KX8wsxmeKk46YsZTMsvrB3-CjLrWjTfu98w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "localhost:5050/api/tasks",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"tasks"
+							]
+						},
+						"description": "Retrieve tasks that are pending"
+					},
+					"response": []
+				},
+				{
+					"name": "Task Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE1MTMyMDk4MzgsImV4cCI6MTU5MDk2OTgzOCwidXNlcklkIjoiYTZmMGU4MDYtMjAxMi00MzZiLWEwMDEtODhjYjVlOWMxNjgxIn0.F5bTnuNR8LGhh1R7RolIuakKkThHnGYMBtUVoKMI0B13fwZkge2KX8wsxmeKk46YsZTMsvrB3-CjLrWjTfu98w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"content\": \"This is a task\",\n\t\"notes\": \"here are some notes\",\n\t\"priority\": 1,\n\t\"dueDate\": \"2018-01-20T12:30:00Z\"\n}"
+						},
+						"url": {
+							"raw": "localhost:5050/api/tasks",
+							"host": [
+								"localhost"
+							],
+							"port": "5050",
+							"path": [
+								"api",
+								"tasks"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
