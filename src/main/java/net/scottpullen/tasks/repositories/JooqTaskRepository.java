@@ -53,7 +53,19 @@ public class JooqTaskRepository implements TaskRepository {
         required(id, "TaskId required");
 
         return Single.create(subscriber -> {
-            Optional<Task> maybeTask = jooq.select()
+            Optional<Task> maybeTask = jooq.select(
+                    Tasks.ID,
+                    Tasks.USER_ID,
+                    Tasks.CONTENT,
+                    Tasks.NOTES,
+                    Tasks.STATUS,
+                    Tasks.PRIORITY,
+                    Tasks.DUE_DATE,
+                    Tasks.COMPLETED_AT,
+                    Tasks.CREATED_AT,
+                    Tasks.UPDATED_AT,
+                    Tasks.DELETED_AT
+                )
                 .from(Tasks.TABLE)
                 .where(Tasks.ID.eq(id))
                 .limit(1)

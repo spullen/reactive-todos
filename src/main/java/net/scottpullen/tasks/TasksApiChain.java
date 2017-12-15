@@ -12,9 +12,10 @@ public class TasksApiChain implements Action<Chain> {
     @Override
     public void execute(Chain chain) throws Exception {
         chain.path(ctx -> ctx.byMethod(byMethodSpec -> byMethodSpec
-                .get(TaskIndexHandler.class)
-                .post(TaskCreateHandler.class)
-            ))
+                    .get(TaskIndexHandler.class)
+                    .post(TaskCreateHandler.class)
+                )
+            )
             .prefix(":taskId", taskChain -> taskChain
                 .all(TaskIdHandler.class)
                 .path(ctx -> ctx.byMethod(byMethodSpec -> byMethodSpec

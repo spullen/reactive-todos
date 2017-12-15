@@ -77,4 +77,8 @@ public class UpdateTaskCommand implements Serializable {
         this.dueDate = dueDate;
     }
 
+    @Override
+    public String toString() {
+        return "TaskId " + id + ", Content " + content + ", Notes " + notes + ", Status " + status + ", Priority " + priority + ", DueDate " + dueDate;
+    }
 }

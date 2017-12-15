@@ -20,6 +20,7 @@ import static com.baidu.unbiz.fluentvalidator.ResultCollectors.toComplex;
 import static net.scottpullen.common.ArgumentPreconditions.required;
 
 public class TaskUpdateService {
+
     private final TaskRepository taskRepository;
 
     public TaskUpdateService(TaskRepository taskRepository) {

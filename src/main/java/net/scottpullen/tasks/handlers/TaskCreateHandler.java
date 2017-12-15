@@ -37,8 +37,6 @@ public class TaskCreateHandler implements Handler {
     public void handle(Context ctx) throws Exception {
         User currentUser = ctx.get(User.class);
 
-        log.warn("HERE");
-
         ctx.parse(fromJson(CreateTaskCommand.class))
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
             .to(RxRatpack::single)
