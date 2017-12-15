@@ -7,6 +7,8 @@ import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.CreateTaskCommand;
 import net.scottpullen.tasks.services.TaskCreateService;
 import net.scottpullen.users.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ratpack.handling.Context;
 import ratpack.handling.Handler;
 import ratpack.rx2.RxRatpack;
@@ -16,6 +18,8 @@ import static ratpack.jackson.Jackson.fromJson;
 import static ratpack.jackson.Jackson.json;
 
 public class TaskCreateHandler implements Handler {
+
+    private static final Logger log = LoggerFactory.getLogger(TaskCreateHandler.class);
 
     private final Scheduler scheduler;
     private final TaskCreateService taskCreateService;
@@ -32,6 +36,8 @@ public class TaskCreateHandler implements Handler {
     @Override
     public void handle(Context ctx) throws Exception {
         User currentUser = ctx.get(User.class);
+
+        log.warn("HERE");
 
         ctx.parse(fromJson(CreateTaskCommand.class))
             .onError((Throwable t) -> ctx.clientError(HttpResponseStatus.BAD_REQUEST.code()))
