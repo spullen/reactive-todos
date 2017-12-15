@@ -18,6 +18,6 @@ public class TaskUpdatePolicy {
     }
 
     public boolean isAllowed() {
-        return task.getUserId() == user.getId();
+        return task.getUserId().equals(user.getId());
     }
 }

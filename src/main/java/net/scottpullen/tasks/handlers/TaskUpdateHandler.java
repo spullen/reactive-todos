@@ -3,6 +3,7 @@ package net.scottpullen.tasks.handlers;
 import com.google.inject.Inject;
 import io.netty.handler.codec.http.HttpResponseStatus;
 import io.reactivex.Scheduler;
+import net.scottpullen.common.exceptions.NotAuthorizedException;
 import net.scottpullen.common.exceptions.ValidationException;
 import net.scottpullen.tasks.commands.UpdateTaskCommand;
 import net.scottpullen.tasks.entities.TaskId;
@@ -51,6 +52,8 @@ public class TaskUpdateHandler implements Handler {
                     if(error instanceof ValidationException) {
                         ctx.getResponse().status(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                         ctx.render(json(((ValidationException) error).getValidationResult()));
+                    } else if(error instanceof NotAuthorizedException) {
+                        ctx.clientError(HttpResponseStatus.UNAUTHORIZED.code());
                     } else {
                         ctx.clientError(HttpResponseStatus.UNPROCESSABLE_ENTITY.code());
                     }
