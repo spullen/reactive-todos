@@ -1,7 +1,10 @@
 package net.scottpullen.tasks;
 
-import net.scottpullen.tasks.entities.TaskId;
-import net.scottpullen.tasks.handlers.*;
+import net.scottpullen.tasks.handlers.TaskCreateHandler;
+import net.scottpullen.tasks.handlers.TaskDeleteHandler;
+import net.scottpullen.tasks.handlers.TaskIdHandler;
+import net.scottpullen.tasks.handlers.TaskIndexHandler;
+import net.scottpullen.tasks.handlers.TaskUpdateHandler;
 import ratpack.func.Action;
 import ratpack.handling.Chain;
 
